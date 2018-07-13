@@ -24,6 +24,14 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/formslib.php');
+
+/**
+ * config Assign users for session form.
+ *
+ * @package   format_classroom
+ * @copyright 2017 eNyota Learning Pvt Ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */ 
 class config_assignuser_form extends moodleform {
     public function definition() {
         global $DB;

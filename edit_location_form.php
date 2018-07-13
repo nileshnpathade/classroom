@@ -22,6 +22,13 @@ require_once($CFG->libdir.'/formslib.php');
 require_once($CFG->libdir.'/filelib.php');
 global $DB;
 require_login();
+/**
+ * Editing location form.
+ *
+ * @package   format_classroom
+ * @copyright 2017 eNyota Learning Pvt Ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class location_edit_form extends moodleform {
 
     public function definition() {
