@@ -13,23 +13,27 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.');    // It must be included from a Moodle page.
-}
+
+/**
+ * Editing Classroom form.
+ *
+ * @package   format_classroom
+ * @copyright 2018 eNyota Learning Pvt Ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once('../../../config.php');
 require_once($CFG->libdir.'/formslib.php');
 require_once($CFG->libdir.'/filelib.php');
 require_login();
-/**
- * Editing Classroom form.
- *
- * @package   format_classroom
- * @copyright 2017 eNyota Learning Pvt Ltd.
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class classroom_edit_form extends moodleform {
-
+    /**
+     * Modify/Update classrooom form.
+     *
+     * @return void
+     */
     public function definition() {
         global $CFG, $DB;
         $mform = $this->_form;
@@ -39,7 +43,6 @@ class classroom_edit_form extends moodleform {
         $seats = $this->_customdata['seats'];
         $equipment = $this->_customdata['equipment'];
         $locationid = $this->_customdata['location_id'];
-        $mform->addElement('html', '<style>.characterlable { float:right; padding-left:137px;font-size:10px;}</style>');
         $mform->addElement('hidden', 'cid', $cid);
         $mform->setType('cid', PARAM_INT);
 
@@ -65,12 +68,24 @@ class classroom_edit_form extends moodleform {
         $this->add_action_buttons(true, 'Submit');
     }
 
-    // Custom validation should be added here.
+    /**
+     * Custom validation should be added here.
+     *
+     * @return void
+     */
     public function validation($data, $files) {
         global $CFG, $DB;
         $err = array();
         if ($data['seats'] <= 0) {
             $err['seats'] = get_string('zeroseats', 'format_classroom');
+        }
+        $classroom = $data['classroom'];
+        $locationid = $data['location_id'];
+        $cid = $data['cid'];
+        $sql = 'SELECT * FROM {classroom} WHERE classroom = ? AND id != ? AND isdeleted = 1 AND location_id = ?';
+        $getclassroom = $DB->get_records_sql($sql, array($classroom, $cid, $locationid));
+        if (!empty($getclassroom)) {
+            $err['classroom'] = get_string('duplicateclassroom', 'format_classroom');
         }
         if (count($err) == 0) {
             return true;

@@ -367,6 +367,14 @@ class format_classroom extends format_base {
         return !$section->section || $section->visible;
     }
 
+    /**
+     * Section action on classroom format.
+     *
+     * @param $section section of course format.
+     * @param $action action of course format.
+     * @param $sr.
+     * @return array()
+     */
     public function section_action($section, $action, $sr) {
         global $PAGE;
 

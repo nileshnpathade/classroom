@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * All Delect/Unassign user from session.
  *
  * @package format_classroom
  * @copyright 2018 eNyota Learning Pvt Ltd.
@@ -53,10 +54,22 @@ if ($delete === md5($getsession->session)) {
     if ($token == 0) {
         $success = $DB->delete_records('classroom_assignuser', array('id' => $id));
     } else {
-        $success = $DB->delete_records('classroom_assignuser', array('session_id' => $sessionid));
+        $getallassignusers = $DB->get_records('classroom_assignuser', array('session_id' => $sessionid));
+        // Unassign Mail.
+        foreach ($getallassignusers as $key => $userids) {
+            $userto = $DB->get_record('user', array('id' => $userids->userid));
+            $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $sessionid));
+            $messagehtml = "Dear $userto->firstname,<br/><br/>
+                You have unassign for session $getsessiondetails->session<br/><br/>
+                Regards,<br/>
+                $SITE->fullname.
+            ";
+            $success = $DB->delete_records('classroom_assignuser', array('session_id' => $sessionid));
+            email_to_user($userto, $USER, 'Unassign the session', 'Unassign the session for you', $messagehtml);
+        }
     }
     if ($success) {
-        redirect($categoryurl, 'Unassing Session for all users.', null, \core\output\notification::NOTIFY_SUCCESS);
+        redirect($categoryurl, 'Successfully unassigned all users.', null, \core\output\notification::NOTIFY_SUCCESS);
     }
 }
 

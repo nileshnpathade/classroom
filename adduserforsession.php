@@ -15,9 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Assign and Unassign users for session.
  *
- * @package    course format
- * @copyright  2018 Nilesh Pathade
+ * @package    format_classroom
+ * @copyright  2018 eNyota Learning Pvt. Ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('../../../config.php');
@@ -53,21 +54,48 @@ if (!$PAGE->user_is_editing()) {
 }
 
 if (optional_param('add', false, PARAM_BOOL) and confirm_sesskey()) {
-    $addselect = optional_param('addselect', 0, PARAM_INT);
+    $addselect = optional_param_array('addselect', null, PARAM_RAW);
     foreach ($addselect as $userid) {
         $checkexits = $DB->get_records('classroom_assignuser', array('session_id' => $seesionid, 'userid' => $userid));
+        $countofenroll = $DB->get_records('classroom_assignuser', array('session_id' => $seesionid));
+        if (count($countofenroll) >= $getsessiondetails->maxenrol) {
+            $baseurl = '/course/format/classroom/adduserforsession.php';
+            $urlredirct = $CFG->wwwroot.$baseurl.'?seesionid='.$seesionid.'&courseid='.$courseid;
+            redirect($urlredirct, get_string('maxenrolmorethanseats', 'format_classroom'),
+                null, \core\output\notification::NOTIFY_ERROR);
+            exit();
+        }
         if (empty($checkexits)) {
             $classroomassignuser = new stdClass();
             $classroomassignuser->session_id = $seesionid;
             $classroomassignuser->userid = $userid;
             $classroomassignuser->assign_by = $USER->id;
             $insertedid = $DB->insert_record('classroom_assignuser', $classroomassignuser);
+            // Assign Mail.
+            $userto = $DB->get_record('user', array('id' => $userid));
+            $messagehtml = "Dear $userto->firstname,<br/><br/>
+                You have assign for session $getsessiondetails->session<br/><br/>
+                Regards,<br/>
+                $SITE->fullname.
+            ";
+
+            email_to_user($userto, $USER, 'Assign the session', 'Assign the session for you', $messagehtml);
         }
     }
 } else if (optional_param('remove', false, PARAM_BOOL) and confirm_sesskey()) {
     $removeselect = optional_param('removeselect', 0, PARAM_INT);
     foreach ($removeselect as $userid) {
         $scc = $DB->delete_records('classroom_assignuser', array('userid' => $userid, 'session_id' => $seesionid));
+
+        // Unassign Mail.
+        $userto = $DB->get_record('user', array('id' => $userid));
+        $messagehtml = "Dear $userto->firstname,<br/><br/>
+            You have unassign for session $getsessiondetails->session<br/><br/>
+            Regards,<br/>
+            $SITE->fullname.
+        ";
+        email_to_user($userto, $USER, 'Unassign the session', 'Unassign the session for you', $messagehtml);
+
     }
 }
 

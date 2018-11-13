@@ -29,16 +29,20 @@ require_once($CFG->libdir.'/formslib.php');
  * Editing Session form.
  *
  * @package   format_classroom
- * @copyright 2017 eNyota Learning Pvt Ltd.
+ * @copyright 2018 eNyota Learning Pvt Ltd.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class session_edit_form extends moodleform {
-
+    /**
+     * Modify/Update session form with definition.
+     *
+     * @return void
+     */
     public function definition() {
         global $USER, $CFG, $COURSE, $DB, $PAGE;
         $mform =& $this->_form;
-        $mform->addElement('html', '<style>.characterlable { float:right; padding-left:266px;font-size:10px;}</style>');
         $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/myjavascript.js'));
+        $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/course/format/classroom/css/style.css'));
         $courseid = $this->_customdata['courseid'];
         $sessionid = $this->_customdata['session_id'];
 
@@ -98,8 +102,9 @@ class session_edit_form extends moodleform {
 
         $mform->addElement('textarea', 'other_details',
             get_string("otherdetails", "format_classroom"), 'rows="5" cols="35" maxlength="5000"');
+        $mform->addRule('other_details', get_string('required'), 'required', null, 'client');
         $mform->setType('other_details', PARAM_RAW);
-        $mform->addElement('html', '<div class="form-group row"><div class="col-md-9 characterlable">5000 Character</div></div>');
+        $mform->addElement('html', '<div class="form-group row"><div class="col-md-9 charpostion">5000 Character</div></div>');
 
         if (isset($checkexits) && !empty($checkexits)) {
             $mform->setDefault('session', $checkexits->session);
@@ -114,9 +119,14 @@ class session_edit_form extends moodleform {
         $this->add_action_buttons(true);
     }
 
-    // Custom validation should be added here.
+    /**
+     * Custom validation should be added here.
+     *
+     * @return void
+     */
     public function validation($data, $files) {
         global $CFG, $DB;
+
         $errors = array();
         $startday = $data['session_date'];
         $endday = $data['session_date_end'];
@@ -125,9 +135,20 @@ class session_edit_form extends moodleform {
         $seesionstartdate = $data['session_date'];
         $seesionenddate = $data['session_date_end'];
         $coursestartdate = $getcoursedetails->startdate;
-        $courseenddate = $getcoursedetails->enddate;
+        $courseenddate = $getcoursedetails->enddate + 24 * 60 * 59.9;
         $errors['session_date_end'] = '';
         $errors['session_date'] = '';
+
+        // Duplicate session name.
+        $sessionname = trim($data['session']);
+        $sessionid = $data['session_id'];
+        $location = $data['location'];
+        $sqlsession = 'SELECT * FROM {classroom_session} WHERE id != ? AND session = ? AND courseid = ?';
+        $resultsession = $DB->get_records_sql($sqlsession, array($sessionid, $sessionname, $data['courseid']));
+        if (!empty($resultsession)) {
+            $errors['session'] = get_string('duplicatesessionname', 'format_classroom');
+            $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
+        }
 
         // Session start date must be greater than current time.
         if ($data['session_date'] < time()) {
@@ -143,7 +164,7 @@ class session_edit_form extends moodleform {
 
         // Session start date must be bigger than end date.
         if ($startday >= $endday) {
-            $errors['session_date'] .= get_string('invalidsessiondatecurrent', 'format_classroom');
+            $errors['session_date_end'] .= get_string('invalidsessiondateenddaterange', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
 
@@ -165,7 +186,7 @@ class session_edit_form extends moodleform {
 
         // Session start date must be grather than course state date.
         if ( $seesionenddate > $courseenddate ) {
-            $errors['session_date_end'] = get_string('sessiondatenotavailable', 'format_classroom');
+            $errors['session_date_end'] = get_string('invalidsessiondateenddate', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
 
@@ -192,7 +213,6 @@ class session_edit_form extends moodleform {
                 OR ( ($value->session_date_end < $startday)
                     AND ($value->session_date_end < $endday)))) {
                 $errors['classroom'] = get_string('sessionenddate', 'format_classroom');
-                $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
             }
         }
         if (empty($_POST['classroom'])) {

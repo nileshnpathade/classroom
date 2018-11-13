@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Create the session.
+ *
+ * @since 3.4.2
+ * @package format_classroom
+ * @copyright eNyota Learning Pvt Ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once('../../../config.php');
 require_once(dirname(__FILE__).'/form_session.php');
 
@@ -72,10 +81,10 @@ $mform->display();
 echo $OUTPUT->footer();
 ?>
 <script>
-function get_states(path, countryid, catid) {
+function get_states(path, locationid, catid) {
     var id = catid.slice(-1);
     $.ajax({
-        url : path + "/course/format/classroom/states.php?countryid=" + countryid,
+        url : path + "/course/format/classroom/getclassroom_name.php?locationid=" + locationid,
             beforeSend: function() {
             
             },
@@ -92,8 +101,8 @@ function get_states(path, countryid, catid) {
     });
 }
 $(document).ready(function(){
-    var countryid = $('#id_location :selected').val();
+    var locationid = $('#id_location :selected').val();
     var path = "<?php echo $CFG->wwwroot; ?>/";
-    get_states(path, countryid, countryid) 
+    get_states(path, locationid, locationid) 
 });
 </script>

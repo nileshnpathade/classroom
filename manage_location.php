@@ -25,12 +25,14 @@ $PAGE->set_heading(get_string('manage_location', 'format_classroom'));
 $PAGE->set_pagelayout('course');
 $PAGE->navbar->add('Site administration', new moodle_url('/admin/search.php'));
 $PAGE->navbar->add('Plugins', new moodle_url('/admin/category.php?category=modules'));
-$PAGE->navbar->add('Configure', new moodle_url('/admin/settings.php?section=formatsettingclassroom'));
+$PAGE->navbar->add('Course formats', new moodle_url('/admin/category.php?category=formatsettings'));
+$PAGE->navbar->add('Classroom format', new moodle_url('/admin/settings.php?section=formatsettingclassroom'));
 $PAGE->navbar->add('Manage Location');
 $PAGE->requires->jquery();
+$PAGE->requires->css( new moodle_url($CFG->wwwroot . '/course/format/classroom/css/style.css'));
 require_login();
 if (!is_siteadmin()) {
-    $sqlrole = "select * from {role_assignments} where userid = ".$USER->id." and (roleid != 1 OR roleid != 2)  and contextid = 1";
+    $sqlrole = "SELECT * FROM {role_assignments} WHERE userid = ".$USER->id." and (roleid != 1 OR roleid != 2)  and contextid = 1";
     $roleassignments = $DB->get_records_sql($sqlrole, array());
     if (empty($roleassignments)) {
         redirect($CFG->wwwroot);
@@ -41,26 +43,25 @@ $perpage = optional_param('perpage', 10, PARAM_INT);
 $courseid = optional_param('cid', 0, PARAM_INT);
 echo $OUTPUT->header();
 $addurl = 'course/format/classroom/add_location.php';
-
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/search.js'));
-
 $out = '';
 $out .= html_writer::empty_tag('input', array('type' => 'text',
 'class' => 'form-control', 'name' => 'search', 'id' => 'search',
-'placeholder' => 'Search', 'style' => 'max-width:20%;float:right;'));
+'placeholder' => 'Search'));
 echo $out."";
 
-echo '<a class="btn btn-primary" href="'.$CFG->wwwroot.'/'.$addurl.'" title="Add Location" style="float:left;">'.
+echo '<a class="btn btn-primary addbtn" href="'.$CFG->wwwroot.'/'.$addurl.'" title="Add Location">'.
 get_string('addlocation', 'format_classroom') .' </a><br/><br/><br/>';
 
 $start = $page * $perpage;
-$results1 = $DB->get_records_sql("select * from {classroom_location} where isdeleted != 0", array());
-$results = $DB->get_records_sql("select * from {classroom_location} where isdeleted != 0 LIMIT $start, $perpage" ,  array());
+$results1 = $DB->get_records_sql("SELECT * FROM {classroom_location} WHERE isdeleted != 0", array());
+$results = $DB->get_records_sql("SELECT * FROM {classroom_location} WHERE isdeleted != 0 LIMIT $start, $perpage" ,  array());
 echo "<style> td.cell.c3.lastcol{ padding-left:0px; } </style>";
 $table = new html_table();
 $table->id = 'myTable';
 $table->head = array('Location Name', 'Address', 'Classroom', 'Actions');
 $i = 1;$j = 0;
+
 foreach ($results as $re) {
     $id = $i++;
     $cid = $re->id;
@@ -76,8 +77,8 @@ foreach ($results as $re) {
     } else {
         $clurl2 = $CFG->wwwroot.'/course/format/classroom/manage_classroom.php?location_id='.$cid;
         $count = count($classroomdisplayname);
-        $classroomlike = '<a href="'.$clurl2.'">'.$count.'</a>';
-        $classroomlike .= '&nbsp;&nbsp;<a href="'.$addurl.'" title="Add Classroom"><i class="icon fa fa-desktop"></i></a>';
+        $classroomlike = '<span class="classroomcount"><a href="'.$clurl2.'"><i class="icon fa fa-desktop"></i><sup>'.$count.'</sup></a></span>';
+        $classroomlike .= '&nbsp;&nbsp;<a href="'.$addurl.'" title="Add Classroom"><i class="icon fa fa-plus-square"></i></a>';
     }
     $link1 = $CFG->wwwroot.'/course/format/classroom/edit_location.php?cid='.$cid;
     $link2 = $CFG->wwwroot.'/course/format/classroom/delete_loc.php?cid='.$cid;
@@ -93,13 +94,12 @@ foreach ($results as $re) {
         $table->data[] = array($location, $address, $classroomlike, $link);
     }
     $j++;
-
     $popupcontent = '<div class="modal fade" id="myModal'.$cid.'" role="dialog">';
-    $popupcontent .= '<div class="modal-dialog" style="max-width:750px;">';
+    $popupcontent .= '<div class="modal-dialog">';
     $popupcontent .= '<div class="modal-content">';
     $popupcontent .= '<div class="modal-header">';
-    $popupcontent .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
     $popupcontent .= '<h4 class="modal-title"> Location : '.$location.'</h4>';
+    $popupcontent .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
     $popupcontent .= '</div> <div class="modal-body">';
     $popupcontent .= '<table style="margin-left: 10px;">';
     $popupcontent .= '<tr> <th>Address : </th> <td>'.$address.'</td> </tr>';
@@ -111,9 +111,9 @@ foreach ($results as $re) {
     echo $popupcontent;
 }
 echo html_writer::table($table);
-
+echo "<div class='nodata'><b class='nodatatodisplay'>".get_string('nodatatodisplay', 'format_classroom')."</b><br></div>";
 if ($j == 0) {
-    echo "<b style='color:#3A3D3E'>".get_string('nodatatodisplay', 'format_classroom')."</b><br>";
+    echo "<div class='nodata1'><b class='nodatatodisplay'>".get_string('nodatatodisplay', 'format_classroom')."</b></div><br>";
 }
 $burl = '/course/format/classroom/manage_location.php';
 $baseurl = new moodle_url($burl, array('sort' => 'location', 'dir' => 'ASC', 'perpage' => $perpage));

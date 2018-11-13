@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Attendance form.
+ * Display attendance status.
+ *
+ * @package   format_classroom
+ * @copyright 2018 eNyota Learning Pvt Ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once('../config.php');
 global $CFG, $USER, $DB, $PAGE, $COURSE;
 
@@ -24,7 +33,6 @@ $seesionid = optional_param('seesionid', 0, PARAM_INT);
 $sesseid = optional_param('sess_id', 0, PARAM_INT);
 require_login();
 $start = $page * $perpage;
-
 $out = '';
 $acurl = 'course/format/classroom/attendance.php?sess_id='.$sesseid.'&courseid='.$COURSE->id.'&token=1';
 $out .= html_writer::start_tag('form', array('name' => 'attendanceform',
@@ -132,10 +140,11 @@ echo $OUTPUT->paging_bar(count($getenrolusers1), $page, $perpage, $baseurl);
 
 $getsessiondate = $DB->get_record('classroom_session', array('id' => $sesseid));
 $out1 = '';
+echo "<div class='nodata'><b class='nodatatodisplay'>".get_string('nodatatodisplay', 'format_classroom')."</b><br></div>";
 if ($j == 0) {
-    echo "<b style='color:#3A3D3E'>".get_string('nodatatodisplay', 'format_classroom')."</b><br><br>";
+    echo "<div class='nodata1'><b class='nodatatodisplay'>".get_string('nodatatodisplay', 'format_classroom')."</b></div><br>";
 }
-if ($getsessiondate->session_date >= time()) {
+if ($getsessiondate->session_date <= time()) {
     if ($j != 0) {
         $out1 .= html_writer::empty_tag('input', array('type' => 'submit',
         'class' => 'btn btn-primary', 'name' => 'submit', 'value' => 'Submit'));

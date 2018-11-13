@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Editing location form.
+ *
+ * @package   format_classroom
+ * @copyright 2018 eNyota Learning Pvt Ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.');    // It must be included from a Moodle page.
 }
@@ -23,14 +30,18 @@ require_once($CFG->libdir.'/filelib.php');
 global $DB;
 require_login();
 /**
- * Editing location form.
+ * Class editing location form.
  *
  * @package   format_classroom
- * @copyright 2017 eNyota Learning Pvt Ltd.
+ * @copyright 2018 eNyota Learning Pvt Ltd.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class location_edit_form extends moodleform {
-
+    /**
+     * Modify/Update location form.
+     *
+     * @return void
+     */
     public function definition() {
         global $CFG, $DB, $PAGE;
 
@@ -64,10 +75,15 @@ class location_edit_form extends moodleform {
         $mform->addElement('text', 'emailid', get_string('emailid', 'format_classroom'), 'placeholder="Enter Email ID"');
         $mform->setType('emailid', PARAM_RAW);
 
-        $mform->addElement('html', '<div id="map" style="height:200px"></div>');
+        $mform->addElement('html', '<div id="map"></div>');
         $this->add_action_buttons(true, 'Submit');
     }
 
+    /**
+     * Custom validation should be added here.
+     *
+     * @return void
+     */
     public function validation($data, $files) {
         global $CFG, $DB;
         $err = array();
@@ -78,6 +94,10 @@ class location_edit_form extends moodleform {
         }
         if (empty(trim($data['location']))) {
             $err['location'] = get_string('required');
+        }
+        $results = $DB->get_records_sql("SELECT * FROM {classroom_location} WHERE isdeleted != 0 AND location=? AND id != ?" ,  array($data['location'], $data['cid']));
+        if (!empty($results)) {
+            $err['location'] = get_string('duplicatelocation', 'format_classroom');
         }
         if (empty(trim($data['address']))) {
             $err['address'] = get_string('required');

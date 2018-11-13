@@ -30,7 +30,7 @@ require_once('../../../course/lib.php');
 global $CFG, $USER, $DB, $PAGE, $COURSE;
 $context = context_system::instance();
 $PAGE->set_context($context);
-
+$PAGE->requires->css( new moodle_url($CFG->wwwroot . '/course/format/classroom/css/style.css'));
 $PAGE->set_url('/../../../add_location.php');
 $PAGE->set_title(get_string('addlocation', 'format_classroom'));
 $PAGE->set_heading(get_string('addlocation', 'format_classroom'));
@@ -38,7 +38,7 @@ $PAGE->set_pagelayout('course');
 $PAGE->navbar->add('Site administration', new moodle_url('/admin/search.php'));
 $PAGE->navbar->add('Plugins', new moodle_url('/admin/category.php?category=modules'));
 $PAGE->navbar->add('Course formats', new moodle_url('/admin/category.php?category=formatsettings'));
-$PAGE->navbar->add('Configure', new moodle_url('/admin/settings.php?section=formatsettingclassroom'));
+$PAGE->navbar->add('Classroom format', new moodle_url('/admin/settings.php?section=formatsettingclassroom'));
 $PAGE->navbar->add('Manage Location', new moodle_url('/course/format/classroom/manage_location.php'));
 $PAGE->navbar->add('Add Location');
 

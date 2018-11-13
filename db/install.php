@@ -15,16 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * LDAP enrolment plugin installation.
+ * classroom course format plugin installation.
  *
- * @package    enrol_classroom
- * @author     Nilesh Pathade
- * @copyright  2018 Nilesh Pathade eNyota Learing Pvt Ltd
+ * @package    format_classroom
+ * @copyright  2018 eNyota Learning Pvt. Ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-
+/**
+ * classroom course format plugin xmldb.
+ *
+ * @return void
+ */
 function xmldb_format_classroom_install() {
     global $CFG, $DB;
 }

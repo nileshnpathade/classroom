@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/renderer.php');
-
+$PAGE->requires->css( new moodle_url($CFG->wwwroot . '/course/format/classroom/css/style.css'));
 /**
  * Basic renderer for classroom format.
  *
@@ -195,12 +195,11 @@ class format_classroom_renderer extends format_section_renderer_base {
         AND ue.enrolid = e.id WHERE r.id = 5
         AND ue.userid = $USER->id AND e.courseid = $COURSE->id";
         $checkuserrole = $DB->get_record_sql($sql, array());
-
         if ($PAGE->user_is_editing()) {
             echo html_writer::start_tag('form', array('method' => 'post'));
             echo html_writer::empty_tag('input', array('type' => 'submit',
                 'value' => get_string('editmenu', 'format_classroom') ,
-                'class' => 'btn btn-primary'));
+                'class' => 'btn btn-primary mangesession'));
             echo html_writer::empty_tag('input', array('type' => 'hidden', 'value' => 'true', 'name' => 'editmenumode'));
             echo html_writer::empty_tag('input', array('type' => 'hidden', 'value' => $course->id, 'name' => 'id'));
             echo html_writer::empty_tag('input', array('type' => 'hidden', 'value' => 'Nil', 'name' => 'token'));
@@ -209,7 +208,7 @@ class format_classroom_renderer extends format_section_renderer_base {
             if (is_siteadmin()) {
                 echo html_writer::empty_tag('input', array('type' => 'submit',
                     'value' => get_string('editmenu', 'format_classroom') ,
-                    'class' => 'btn', 'disabled' => 'disabled' , 'style' => 'color:#000'));
+                    'class' => 'btn mangesession', 'disabled' => 'disabled' ));
                 echo "<br/>";
             }
         }
@@ -224,27 +223,28 @@ class format_classroom_renderer extends format_section_renderer_base {
 
             foreach ($getsessiondetails1 as $key => $sessiondetails) {
                 $in1 = '';
-                $style = '';
+                $style = 'collapsed';
                 if ($c == 0) {
-                    $in1 = 'show';
+                    $in1 = 'show in';
+                    $style = '';
                 }
+                $otherdetails = "<a href='#' data-toggle='modal' data-backdrop='static' data-target='#myModal".$c."' title='View'>Show</a>";
                 echo "<div class='card-group' id='accordion'>";
                 echo "<div class='card'>";
-                echo "<div class='card-header card-primary' style='background-color:#1177d1'>
-                            <strong class='card-title'>
-                                <a data-toggle='collapse' data-parent='#accordion'
-                                href='#collapse$c' style='color: #FFF;'>".
-                                strtoupper('Session : '.$sessiondetails->session).
-                                "</a>
-                            </strong>
-                        </div>";
-                echo "</div>
+                echo "<a data-toggle='collapse' data-parent='#accordion'
+                                href='#collapse$c' class='card-link ".$style."' aria-expanded='true'>
+                                <div class='card-header'>
+                                <strong class='card-title'>".
+                                    strtoupper('Session : '.$sessiondetails->session).
+                                "</strong><span class='toggleSymbol'></span>";
+                echo "</div></a>
+                </div>
                 </div>";
-                echo "<div id='collapse$c' class='collapse $in1' data-parent='#accordion' $style;>";
-                echo "<div class='card-body' style='padding: 10px 50px 10px 50px;''>";
-                echo "<table width='100%'><tr>";
+                echo "<div id='collapse$c' class='collapse $in1' data-parent='#accordion'>";
+                echo "<div class='card-body managebody'>";
+                echo "<table width='100%' class='valign'><tr>";
                 echo "<td><b>Session Start Date & Time:</b></td>";
-                echo "<td>".date('Y-m-d H:i', $sessiondetails->session_date)."</td>";
+                echo "<td>".date('d-m-Y H:i', $sessiondetails->session_date)."</td>";
                 echo "<td><b>Session Location:</b></td>";
                 echo "<td>";
                 $getlocation = $DB->get_record('classroom_location', array('id' => $sessiondetails->location));
@@ -252,8 +252,8 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "</td>";
                 echo "</tr>";
                 echo "<tr>";
-                echo "<td><b>Session End date & Time:</b></td>";
-                echo "<td>".date('Y-m-d  H:i', $sessiondetails->session_date_end)."</td>";
+                echo "<td><b>Session End Date & Time:</b></td>";
+                echo "<td>".date('d-m-Y  H:i', $sessiondetails->session_date_end)."</td>";
                 echo "<td><b>Session Classroom:</b></td>";
                 echo "<td>";
                 $getclassroom = $DB->get_record('classroom', array('id' => $sessiondetails->classroom));
@@ -261,11 +261,29 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "</td>";
                 echo "</tr>";
                 echo "<tr>";
-                echo "<td><b>Last sub-scription date:</b></td>";
-                echo "<td>".date('Y-m-d H:i', $sessiondetails->last_subscription_date)."</td>";
+                echo "<td><b>Last Subscription Date:</b></td>";
+                echo "<td>".date('d-m-Y H:i', $sessiondetails->last_subscription_date)."</td>";
+                echo "<td><b>Session Details:</b></td>";
+                echo "<td width='100px' valign='top'>";
+                echo $otherdetails;
+                echo "</td>";
                 echo "</tr>";
                 echo "</table>";
                 echo "</div></div>";
+                $popupcontent = '<div class="modal fade" id="myModal'.$c.'" role="dialog">';
+                $popupcontent .= '<div class="modal-dialog">';
+                $popupcontent .= '<div class="modal-content">';
+                $popupcontent .= '<div class="modal-header">';
+                $popupcontent .= '<h4 class="modal-title"> Session Details </h4>';
+                $popupcontent .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                $popupcontent .= '</div> <div class="modal-body">';
+                $popupcontent .= '<table class="popuptable">';
+                $popupcontent .= '<tr id="hidethis"> <td> '.$sessiondetails->other_details.' </td> </tr>';
+                $popupcontent .= '</table>';
+                $popupcontent .= '</div> <div class="modal-footer">';
+                $popupcontent .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
+                $popupcontent .= '</div> </div> </div> </div>';
+                echo $popupcontent;
                 $c = $c + 1;
             }
             echo "<br/>";
@@ -295,28 +313,29 @@ class format_classroom_renderer extends format_section_renderer_base {
 
             $c = 0;
             foreach ($getsessiondetails2 as $key => $sessiondetails) {
-                 $in1 = '';
+                $in1 = '';
                 $style = '';
                 if ($c == 0) {
                     $in1 = 'show';
                 }
+                $otherdetails = "<a href='#' data-toggle='modal' data-backdrop='static' data-target='#myModal".$c."' title='View'>Show</a>";
                 echo "<div class='card-group' id='accordion'>";
                 echo "<div class='card'>";
-                echo "<div class='card-header card-primary' style='background-color:#1177d1'>
-                            <strong class='card-title'>
-                                <a data-toggle='collapse' data-parent='#accordion'
-                                href='#collapse$c' style='color: #FFF;'>".
-                                strtoupper('Session : '.$sessiondetails->session).
-                                "</a>
-                            </strong>
-                        </div>";
-                echo "</div>
+                echo "<a data-toggle='collapse' data-parent='#accordion'
+                                href='#collapse$c' class='card-link collapsed' aria-expanded='true'>
+                                <div class='card-header'>
+                                <strong class='card-title'>".
+                                    strtoupper('Session : '.$sessiondetails->session).
+                                "</strong><span class='toggleSymbol'></span>";
+                echo "</div></a>
+                </div>
                 </div>";
-                echo "<div id='collapse$c' class='collapse $in1' data-parent='#accordion' $style;>";
-                echo "<div class='card-body' style='padding: 10px 50px 10px 50px;''>";
-                echo "<table width='100%'><tr>";
+
+                echo "<div id='collapse$c' class='collapse $in1' data-parent='#accordion'>";
+                echo "<div class='card-body managebody'>";
+                echo "<table width='100%' class='valign'><tr>";
                 echo "<td><b>Session Start Date & Time:</b></td>";
-                echo "<td>".date('Y-m-d H:i', $sessiondetails->session_date)."</td>";
+                echo "<td>".date('d-m-Y H:i', $sessiondetails->session_date)."</td>";
                 echo "<td><b>Session Location:</b></td>";
                 echo "<td>";
                 $getlocation = $DB->get_record('classroom_location', array('id' => $sessiondetails->location));
@@ -324,8 +343,8 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "</td>";
                 echo "</tr>";
                 echo "<tr>";
-                echo "<td><b>Session End date & Time:</b></td>";
-                echo "<td>".date('Y-m-d  H:i', $sessiondetails->session_date_end)."</td>";
+                echo "<td><b>Session End Date & Time:</b></td>";
+                echo "<td>".date('d-m-Y  H:i', $sessiondetails->session_date_end)."</td>";
                 echo "<td><b>Session Classroom:</b></td>";
                 echo "<td>";
                 $getclassroom = $DB->get_record('classroom', array('id' => $sessiondetails->classroom));
@@ -333,11 +352,30 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "</td>";
                 echo "</tr>";
                 echo "<tr>";
-                echo "<td><b>Last sub-scription date:</b></td>";
-                echo "<td>".date('Y-m-d H:i', $sessiondetails->last_subscription_date)."</td>";
+                echo "<td><b>Last Subscription Date:</b></td>";
+                echo "<td>".date('d-m-Y H:i', $sessiondetails->last_subscription_date)."</td>";
+                echo "<td><b>Session Details:</b></td>";
+                echo "<td width='100px' valign='top'>";
+                echo $otherdetails;
+                echo "</td>";
                 echo "</tr>";
                 echo "</table>";
                 echo "</div></div>";
+
+                $popupcontent = '<div class="modal fade" id="myModal'.$c.'" role="dialog">';
+                $popupcontent .= '<div class="modal-dialog">';
+                $popupcontent .= '<div class="modal-content">';
+                $popupcontent .= '<div class="modal-header">';
+                $popupcontent .= '<h4 class="modal-title"> Session Details </h4>';
+                $popupcontent .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                $popupcontent .= '</div> <div class="modal-body">';
+                $popupcontent .= '<table class="popuptable">';
+                $popupcontent .= '<tr id="hidethis"> <td> '.$sessiondetails->other_details.' </td> </tr>';
+                $popupcontent .= '</table>';
+                $popupcontent .= '</div> <div class="modal-footer">';
+                $popupcontent .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
+                $popupcontent .= '</div> </div> </div> </div>';
+                echo $popupcontent;
                 $c = $c + 1;
             }
             echo "<br/>";
@@ -382,9 +420,8 @@ class format_classroom_renderer extends format_section_renderer_base {
             $this->print_single_section_page($course, $sections, $mods, $modnames, $modnamesused, $displaysection);
             return;
         }
-        echo "<style type='text/css'> #buttoneditmenuend:hover { background-color:#FFF; } </style>";
+
         echo html_writer::start_tag('form', array('method' => 'GET'));
-        echo "<style> .btn-secondary:active:hover { background-color:#FFF; } </style>";
         echo html_writer::empty_tag('input', array('type' => 'submit',
             'value' => get_string('editmenuend', 'format_classroom') ,
             'class' => 'btn btn-secondary', 'id' => 'buttoneditmenuend'));
@@ -422,6 +459,5 @@ class format_classroom_renderer extends format_section_renderer_base {
         include($CFG->dirroot . '/course/format/classroom/form_' . $menuaction . '.php');
         // Close box container.
         echo html_writer::end_tag('div');
-
     }
 }

@@ -15,26 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Get classroom name list.
- * Calling by AJAX function to get classroom name from location.
+ * Get classroom name.
  *
- * @since 3.4.2
- * @package format_classroom
- * @copyright eNyota Learning Pvt Ltd.
+ * @package   format_classroom
+ * @copyright 2018 eNyota Learning Pvt Ltd.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once('../../../config.php');
-global $PAGE, $CFG, $DB, $OUTPUT;
+$locationid = optional_param('locationid', 0, PARAM_INT);
+global $DB;
 require_login();
-$locationid  = optional_param('location_id', 0, PARAM_INT);
-
-$classrooms = $DB->get_records_sql('select id,classroom from {classroom}
-	where location_id = ? AND isdeleted != ?', array($locationid, 0));
-
-echo "<select class = 'custom-select' name = 'classroom'>
-<option value = ''>Select Classroom</option>";
-foreach ($classrooms as $classr) {
-    echo "<option value = '$classr->id'>".$classr->classroom."</option>";
+$getclassroom = $DB->get_records_sql('select id, classroom from {classroom}
+    where location_id = ? AND isdeleted != ?', array($locationid, 0));
+$arr = array(0 => 'Select Classroom');
+foreach ($getclassroom as $key => $value) {
+    $arr[$value->id] = $value->classroom;
 }
-echo "</select>";
+echo json_encode($arr);

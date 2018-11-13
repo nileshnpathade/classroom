@@ -1,0 +1,146 @@
+/*
+ * This file is part of Moodle - http://moodle.org/
+ *
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.card-header{
+    background-color:#1177d1!important;
+    color:#FFF!important;
+}
+.card-header:title{
+    content:'';
+    display:'none';
+}
+.card-header:after {
+    content: '\2212';
+    color: #fff;
+    font-weight: bold;
+    float: right;
+}
+.managebody{
+    padding: 20px 50px 10px 50px;
+}
+.collapsed .card-header:after {
+    content: '\002B';
+    color: #fff;
+    font-weight: bold;
+}
+.card-link .collapsed{
+    color: #FFF;
+}
+.modal-header h4{
+    float:left;
+}
+.mangesession {
+    color:#FFF;
+}
+.mangesession:disabled{
+    color:#000;
+}
+.mangesession{
+    color:#FFF;
+}
+
+#buttoneditmenuend{
+    background-color: #FFF;
+    border-color: #1177d1;
+    color:#000;
+}
+#buttoneditmenuend:hover{
+    background-color:#FFF;
+}
+.btn-secondary:active:hover{
+    background-color:#FFF;
+}
+.modal-dialog{
+    max-width:650px;
+}
+.popuptable{
+    margin-left: 10px;
+}
+.modal-header h4{
+    float:left;
+}
+.modal-body table th {
+    width: 100px;
+}
+.custombody table th {
+    width: 180px;
+}
+#search{
+    max-width:20%;
+    float:right;
+}
+
+/* Add Session, Add Classroom And Add Location Button CSS. */
+.addbtn{
+    float:left;
+}
+.nodatatodisplay{
+    color:#3A3D3E;
+}
+.substr{
+    cursor:pointer;
+    font-weight:bold;
+}
+.noactive{
+    background-color:gray;
+    padding:5px;
+}
+.assingspan{
+    padding:5px;
+    background-color:#1177d1;
+}
+.assingspan a{
+    color:#FFF;
+    text-decoration:none;
+}
+.nodata{
+    display:none;
+}
+
+/*
+    Session Page
+*/
+.charpostion{
+    float:right;
+    width: 53%;
+    font-size:10px;
+}
+
+.characterlable{
+    float:right;
+    width: 61%;
+    font-size:10px;
+}
+
+/*
+    MAP - Location Page
+*/
+#map{
+    height:200px;
+}
+
+a .icondective{
+    color: #1177d1;
+}
+
+a .iconactive{
+    color: #262626;
+    cursor: text;
+}
+.valign td{
+    vertical-align: text-top;
+}

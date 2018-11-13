@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Get enrol value.
+ *
+ * @since 3.4.2
+ * @package format_classroom
+ * @copyright eNyota Learning Pvt Ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once('../../../config.php');
 global $PAGE, $CFG, $DB, $OUTPUT;
 $classroomid  = optional_param('classroom_id', 0, PARAM_INT);

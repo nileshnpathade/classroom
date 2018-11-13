@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Editing Session form.
+ *
+ * @since 3.4.2
+ * @package format_classroom
+ * @copyright eNyota Learning Pvt Ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once('../../../config.php');
 require_once(dirname(__FILE__).'/session_edit_form.php');
 global $CFG, $USER, $DB, $PAGE, $COURSE;
@@ -24,7 +33,7 @@ $sessionid = optional_param('cid', 0, PARAM_INT);
 $context = context_system::instance();
 $PAGE->set_context($context);
 $course = get_course($courseid);
-$PAGE->set_url(dirname(__FILE__).'/session_edit.php?cid='.$sessionid.'&courseid='.$courseid);
+$PAGE->set_url('/course/format/classroom/session_edit.php?cid='.$sessionid.'&courseid='.$courseid);
 $PAGE->set_title(get_string('editsession', 'format_classroom'));
 $PAGE->set_heading(get_string('editsession', 'format_classroom'));
 $PAGE->set_pagelayout('course');
@@ -71,7 +80,7 @@ if ($mform->is_cancelled()) {
     if ($updatedid > 0) {
         $redirecturl = $CFG->wwwroot.'/course/view.php?id='.$fromform->courseid;
         $redirecturl .= '&editmenumode=true&menuaction=sessionlist&token=1';
-        redirect($redirecturl, 'Location updated successfully', null, \core\output\notification::NOTIFY_SUCCESS);
+        redirect($redirecturl, 'Session updated successfully', null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
         echo 'Failed to insert record ';
     }
@@ -81,10 +90,10 @@ $mform->display();
 echo $OUTPUT->footer();
 ?>
 <script>
-function get_states(path, countryid, catid,classroomvalue) {
+function get_states(path, locationid, catid,classroomvalue) {
     var id = catid.slice(-1);
     $.ajax({
-        url : path + "/course/format/classroom/states.php?countryid=" + countryid,
+        url : path + "/course/format/classroom/getclassroom_name.php?locationid=" + locationid,
             beforeSend: function() {
             
             },
@@ -106,8 +115,8 @@ function get_states(path, countryid, catid,classroomvalue) {
     });
 }
 $(document).ready(function(){
-    var countryid = $('#id_location :selected').val();
+    var locationid = $('#id_location :selected').val();
     var path = "<?php echo $CFG->wwwroot; ?>";
-    get_states(path, countryid, countryid,"<?php echo $classroomid; ?>");
+    get_states(path, locationid, locationid,"<?php echo $classroomid; ?>");
 });
 </script>

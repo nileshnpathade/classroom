@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Delect classroom.
  *
  * @package format_classroom
  * @copyright 2018 eNyota Learning Pvt Ltd.
@@ -36,7 +37,7 @@ $PAGE->set_heading(get_string('manage_classroom', 'format_classroom'));
 $PAGE->set_pagelayout('course');
 $PAGE->navbar->add('Site administration', new moodle_url('/admin/search.php'));
 $PAGE->navbar->add('Plugins', new moodle_url('/admin/category.php?category=modules'));
-$PAGE->navbar->add('Configure', new moodle_url('/admin/settings.php?section=formatsettingclassroom'));
+$PAGE->navbar->add('Classroom format', new moodle_url('/admin/settings.php?section=formatsettingclassroom'));
 $PAGE->navbar->add('Manage Location', new moodle_url('/course/format/classroom/manage_location.php'));
 $PAGE->navbar->add('Manage Classroom', new moodle_url('/course/format/classroom/manage_classroom.php?location_id='.$locationid));
 $PAGE->navbar->add('Delete '.$getclassroom->classroom);

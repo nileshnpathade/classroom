@@ -13,6 +13,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Assign and Unassign users for session.
+ *
+ * @package    format_classroom
+ * @copyright  2018 eNyota Learning Pvt. Ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once('../../../config.php');
 
 global $CFG, $USER, $DB, $PAGE, $COURSE;
@@ -42,6 +50,7 @@ if (isset($_POST['submit'])) {
                 if ($status == 'P') {
                     $attendance = 'P';
                 }
+
                 $classroomattendance = new stdClass();
                 $classroomattendance->userid = $userid;
                 $classroomattendance->attendance = $attendance;
@@ -50,10 +59,35 @@ if (isset($_POST['submit'])) {
                 $classroomattendance->comment = $comment;
                 $insertedid = $DB->insert_record('classroom_attendance', $classroomattendance);
 
+                // Present Mail.
+                if ($status == 'P') {
+                    $userto = $DB->get_record('user', array('id' => $userid));
+                    $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $_POST['session_name']));
+                    $messagehtml = "Dear $userto->firstname,<br/><br/>
+                        Thank you for attending session $getsessiondetails->session .<br/>
+                        Here is comment for you given by Admin: $comment<br/><br/>
+                        Regards,<br/>
+                        $SITE->fullname.
+                    ";
+                    email_to_user($userto, $USER, 'Thank you for attending session '.$getsessiondetails->session,
+                        'Thank you for attending session', $messagehtml);
+                } else {
+                    $userto = $DB->get_record('user', array('id' => $userid));
+                    $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $_POST['session_name']));
+                    $messagehtml = "Dear $userto->firstname,<br/><br/>
+                        You have miss session $getsessiondetails->session .<br/>
+                        If you have interested again than contact to admin.<br/>
+                        Here is comment for you given by Admin: $comment<br/><br/>
+                        Regards,<br/>
+                        $SITE->fullname.
+                    ";
+                    email_to_user($userto, $USER, 'Absent for session '.$getsessiondetails->session, 'Absent for  session',
+                        $messagehtml);
+                }
             }
             if (isset($insertedid)) {
                 $redirecturl = 'course/view.php?id='.$courseid.'&editmenumode=true&menuaction=assginusertosession&token=1';
-                redirect($CFG->wwwroot.'/'.$redirecturl, 'You have done attendance',
+                redirect($CFG->wwwroot.'/'.$redirecturl, 'Attendance has been done successfully.',
                     null, \core\output\notification::NOTIFY_SUCCESS);
             }
         } else {
@@ -92,11 +126,37 @@ if (isset($_POST['submit'])) {
                     $classroomattendance2->courseid = $courseid;
                     $classroomattendance2->comment = $comment;
                     $insertedid = $DB->insert_record('classroom_attendance', $classroomattendance2);
+
+                    // Present Mail.
+                    if ($status == 'P') {
+                        $userto = $DB->get_record('user', array('id' => $userid));
+                        $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $_POST['session_name']));
+                        $messagehtml = "Dear $userto->firstname,<br/><br/>
+                            Thank you for attending session $getsessiondetails->session .<br/>
+                            Here is comment for you given by Admin: $comment<br/><br/>
+                            Regards,<br/>
+                            $SITE->fullname.
+                        ";
+                        email_to_user($userto, $USER, 'Thank you for attending session '.$getsessiondetails->session,
+                            'Thank you for attending session', $messagehtml);
+                    } else {
+                        $userto = $DB->get_record('user', array('id' => $userid));
+                        $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $_POST['session_name']));
+                        $messagehtml = "Dear $userto->firstname,<br/><br/>
+                            You have miss session $getsessiondetails->session .<br/>
+                            If you have interested again than contact to admin.<br/>
+                            Here is comment for you given by Admin: $comment<br/><br/>
+                            Regards,<br/>
+                            $SITE->fullname.
+                        ";
+                        email_to_user($userto, $USER, 'Absent for session '.$getsessiondetails->session,
+                            'Absent for  session', $messagehtml);
+                    }
                 }
                 $v++;
             }
             $fredirect = $CFG->wwwroot.'/course/view.php?id='.$courseid.'&editmenumode=true&menuaction=assginusertosession&token=1';
-            redirect($fredirect, 'You have update attendance',
+            redirect($fredirect, 'Attendance has been updated successfully',
                 null, \core\output\notification::NOTIFY_SUCCESS);
         }
     }
