@@ -1,28 +1,3 @@
-function myFunctionToDoSomething(path,value){
-    var seesion_day = $('#id_session_date_day').val();
-    var seesion_month = $('#id_session_date_month').val();
-    var seesion_year = $('#id_session_date_year').val();
-    var seesion_hour = $('#id_session_date_hour').val();
-    var seesion_minute = $('#id_session_date_minute').val();
-    var session_date = toTimestamp(seesion_year + ' ' + seesion_month + ' ' + seesion_day + ' ' + seesion_hour + ':' + seesion_minute);
-    var seesion_day_end = $('#id_session_date_end_day').val();
-    var seesion_month_end = $('#id_session_date_end_month').val();
-    var seesion_year_end = $('#id_session_date_end_year').val();
-    var seesion_hour_end = $('#id_session_date_end_hour').val();
-    var seesion_minute_end = $('#id_session_date_end_minute').val();
-    var session_date_end = toTimestamp(seesion_year_end + ' ' + seesion_month_end + ' ' + seesion_day_end + ' ' + seesion_hour_end + ':' + seesion_minute_end);
-    $.ajax({
-        url : path + "/course/format/classroom/getClassroom.php?location_id=" + value + "&session_date" + session_date + "&session_date_end=" + session_date_end,
-        cache : false,
-        success : function(html){
-            $("#classroom_dropdown").html(html);
-        }
-    });
-}
-function toTimestamp(strDate) {
-    var datum = Date.parse(strDate);
-    return datum / 1000;
-}
 initAutocomplete();
 function initAutocomplete() {
     var map = new google.maps.Map(document.getElementById('map'), {
