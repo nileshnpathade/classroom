@@ -70,9 +70,12 @@ if ($mform->is_cancelled()) {
     ? $fromform->session_date_end : time();
     $classroomsession->location = (isset($fromform->location)) ? $fromform->location : '';
     $classroomsession->classroom = (isset($_POST['classroom'])) ? $_POST['classroom'] : '';
+    $classroomsession->teacher = (isset($fromform->teacher)) ? $fromform->teacher : '';
     $classroomsession->maxenrol = (isset($fromform->maxenrol)) ? $fromform->maxenrol : '';
     $classroomsession->last_subscription_date = (isset($fromform->last_subscription_date))
     ? $fromform->last_subscription_date : time();
+    $classroomsession->last_subscription_date_from = (isset($fromform->last_subscription_date_from))
+    ? $fromform->last_subscription_date_from : time();
     $classroomsession->other_details = (isset($fromform->other_details)) ? $fromform->other_details : '';
     $classroomsession->create_by = (isset($USER->id)) ? $USER->id : '';
 

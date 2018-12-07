@@ -12,6 +12,8 @@
         <FIELD NAME="seats" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="equipment" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="details" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="emailid" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="phoneno" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="isdeleted" TYPE="int" LENGTH="9" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -39,10 +41,12 @@
         <FIELD NAME="courseid" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="session_date" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="session_date_end" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="teacher" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="location" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="classroom" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="maxenrol" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="last_subscription_date" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="last_subscription_date_from" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="other_details" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="isdeleted" TYPE="int" LENGTH="9" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
         <FIELD NAME="create_by" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>

@@ -25,6 +25,7 @@
 
 require_once('../../../config.php');
 require_once(dirname(__FILE__).'/add_classroom_form.php');
+
 global $CFG, $DB, $PAGE;
 $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/course/format/classroom/css/style.css'));
 $locationid  = optional_param('location_id', 0, PARAM_INT);
@@ -56,6 +57,8 @@ if ($mform->is_cancelled()) {
     $classroom->classroom = (isset($fromform->classroom)) ? $fromform->classroom : '';
     $classroom->location_id = (isset($fromform->location_id)) ? $fromform->location_id : '';
     $classroom->details = (isset($fromform->details)) ? $fromform->details : '';
+    $classroom->emailid = (isset($fromform->emailid)) ? $fromform->emailid : '';
+    $classroom->phoneno = (isset($fromform->phoneno)) ? $fromform->phoneno : '';
     $classroom->seats = (isset($fromform->seats)) ? $fromform->seats : '';
     $classroom->equipment = (isset($fromform->equipment)) ? $fromform->equipment : '';
     $classroom->isdeleted = 1;

@@ -72,7 +72,7 @@ $results = $DB->get_records_sql($sql, array($locationid));
 
 $table = new html_table();
 $table->id = 'myTable';
-$table->head = array('Classroom Name', 'Available Seats', 'Details', 'Equipment', 'Actions');
+$table->head = array('Classroom Name', 'Email ID', 'Phone No', 'Available Seats', 'Details', 'Equipment', 'Actions');
 $i = 1;
 $j = 0;
 
@@ -82,6 +82,8 @@ foreach ($results as $re) {
     $classroom = $re->classroom;
     $seats = $re->seats;
     $location = $re->location;
+    $emailid = $re->emailid;
+    $phoneno = $re->phoneno;
     $hide1 = '<span id="hide" class="substr"> Hide </span>';
     $hide2 = '<span id="hide_equp" class="substr"> Hide </span>';
     $equipment = $re->equipment;
@@ -105,11 +107,11 @@ foreach ($results as $re) {
     $linkurl2 = $CFG->wwwroot.'/course/format/classroom/delect_class.php?cid='.$cid.'&location_id='.$locationid;
     $link = '<a href='.$linkurl1.' title="Edit">'.$icon.'</a>&nbsp;';
     $link .= '<a href="'.$linkurl2.'" title="Delete">'.$deleteicon.'</a>';
-    $link .= '<a href="#" data-toggle="modal" data-backdrop="static" data-target="#myModal'.$cid.'" title="View">'.
+    $link .= '<a href="#" data-toggle="modal" data-target="#myModal'.$cid.'" title="View">'.
     $viewicon.'</a>';
     $viewicon.'</a>';
     if ($j >= 0) {
-        $table->data[] = array($classroom, $seats, $details, $equipment, $link);
+        $table->data[] = array($classroom, $emailid, $phoneno, $seats, $details, $equipment, $link);
     }
     $j++;
 
@@ -122,6 +124,8 @@ foreach ($results as $re) {
     $popupcontent .= '</div> <div class="modal-body">';
     $popupcontent .= '<table style="margin-left: 10px;">';
     $popupcontent .= '<tr> <th>Location : </th> <td> '.$location.'</td> </tr>';
+    $popupcontent .= '<tr> <th>Email ID : </th> <td> '.$emailid.'</td> </tr>';
+    $popupcontent .= '<tr> <th>Phone No : </th> <td> '.$phoneno.'</td> </tr>';
     $popupcontent .= '<tr> <th>Seats : </th> <td>'.$seats.'</td> </tr>';
     $popupcontent .= '<tr id="hidethis"> <th>Details : </th> <td> '.$details1.'</td> </tr>';
     $popupcontent .= '<tr id="hidethis1" class="hidden" valign="top" > <th>Details : </th> <td> '.$hideeetails.'</td> </tr>';

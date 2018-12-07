@@ -44,11 +44,13 @@ $courseid = optional_param('cid', 0, PARAM_INT);
 echo $OUTPUT->header();
 $addurl = 'course/format/classroom/add_location.php';
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/search.js'));
+$PAGE->requires->js( new moodle_url('https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M'));
+$PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/viewmap.js'));
 $out = '';
 $out .= html_writer::empty_tag('input', array('type' => 'text',
 'class' => 'form-control', 'name' => 'search', 'id' => 'search',
 'placeholder' => 'Search'));
-echo $out."";
+echo $out.'';
 
 echo '<a class="btn btn-primary addbtn" href="'.$CFG->wwwroot.'/'.$addurl.'" title="Add Location">'.
 get_string('addlocation', 'format_classroom') .' </a><br/><br/><br/>';
@@ -77,7 +79,8 @@ foreach ($results as $re) {
     } else {
         $clurl2 = $CFG->wwwroot.'/course/format/classroom/manage_classroom.php?location_id='.$cid;
         $count = count($classroomdisplayname);
-        $classroomlike = '<span class="classroomcount"><a href="'.$clurl2.'"><i class="icon fa fa-desktop"></i><sup>'.$count.'</sup></a></span>';
+        $classroomlike = '<span class="classroomcount"><a href="'.$clurl2.'">';
+        $classroomlike .= '<i class="icon fa fa-desktop"></i><sup>'.$count.'</sup></a></span>';
         $classroomlike .= '&nbsp;&nbsp;<a href="'.$addurl.'" title="Add Classroom"><i class="icon fa fa-plus-square"></i></a>';
     }
     $link1 = $CFG->wwwroot.'/course/format/classroom/edit_location.php?cid='.$cid;
@@ -88,7 +91,7 @@ foreach ($results as $re) {
     $link = '<a href="'.$link1.'" title="Edit">'.$icon.'</a>&nbsp;';
     $link .= '<a href="'.$link2.'" title="Delete">'.
     $delecticon.'</a>';
-    $link .= '<a href="#" data-toggle="modal" data-backdrop="static" data-target="#myModal'.$cid.'" title="View">'.
+    $link .= '<a href="#" data-toggle="modal" onclick="javascript:initAutocomplete()" data-target="#myModal'.$cid.'" title="View">'.
     $viewicon.'</a>';
     if ($j >= 0) {
         $table->data[] = array($location, $address, $classroomlike, $link);
@@ -100,11 +103,13 @@ foreach ($results as $re) {
     $popupcontent .= '<div class="modal-header">';
     $popupcontent .= '<h4 class="modal-title"> Location : '.$location.'</h4>';
     $popupcontent .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
-    $popupcontent .= '</div> <div class="modal-body">';
+    $popupcontent .= '</div> <div class="modal-body"> ';
+    $popupcontent .= '<input type="hidden" name="address" id="id_address" value="'.$address.'" />';
     $popupcontent .= '<table style="margin-left: 10px;">';
     $popupcontent .= '<tr> <th>Address : </th> <td>'.$address.'</td> </tr>';
     $popupcontent .= '<tr> <th>Email ID  : </th> <td>'.$emailid.'</td> </tr>';
     $popupcontent .= '<tr> <th>Phone No : </th> <td>'.$phoneno.'</td> </tr>';
+    $popupcontent .= '<tr> <th>Map : </th> <td> <div id="map"></div> </td> </tr>';
     $popupcontent .= '</table> </div> <div class="modal-footer">';
     $popupcontent .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
     $popupcontent .= '</div> </div> </div> </div>';

@@ -62,7 +62,7 @@ foreach ($results as $re) {
     &nbsp;&nbsp; 0 &nbsp;&nbsp;</span>";
     if (!empty($getuserdetails)) {
         foreach ($getuserdetails as $key => $value) {
-            if ($re->last_subscription_date >= time()) {
+            if ($re->last_subscription_date_from >= time()) {
                 $url = "../course/format/classroom/adduserforsession.php?id=$value->caid&seesionid=$cid&courseid=$COURSE->id";
             } else {
                 $url = "#";
@@ -75,7 +75,7 @@ foreach ($results as $re) {
     }
     $lurl = '#';
     $link = '';
-    if ($re->last_subscription_date >= time()) {
+    if ($re->last_subscription_date_from >= time()) {
         $icon = '<i class="icon fa fa-plus fa-fw "></i>';
         $icondelete = '<i class="icon fa fa-trash fa-fw "></i>';
         $deleteurl = '../course/format/classroom/delete_assigneduser.php?session_id='.$cid.'&token=1&courseid='.$COURSE->id;

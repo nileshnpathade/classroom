@@ -57,6 +57,7 @@ class session_edit_form extends moodleform {
 
         $mform->addElement('text', 'session', get_string('session', 'format_classroom'));
         $mform->setType('session', PARAM_RAW);
+        $mform->addHelpButton('session', 'session', 'format_classroom');
         $mform->addRule('session', get_string('required'), 'required', null, 'client');
 
         $option = array(
@@ -66,12 +67,21 @@ class session_edit_form extends moodleform {
             'step'      => 5
         );
 
+        $mform->addElement('date_time_selector', 'last_subscription_date_from',
+            get_string('lastsubscriptiondatefrom', 'format_classroom') , $option);
+        $mform->addHelpButton('last_subscription_date_from', 'lastsubscriptiondatefrom', 'format_classroom');
+
+        $mform->addElement('date_time_selector', 'last_subscription_date',
+            get_string('lastsubscriptiondateto', 'format_classroom'), $option);
+        $mform->addHelpButton('last_subscription_date', 'lastsubscriptiondateto', 'format_classroom');
+
         // Start Date Time.
         $mform->addElement('date_time_selector', 'session_date', get_string('sessiondatetime', 'format_classroom') , $option);
-
+        $mform->addHelpButton('session_date', 'sessiondatetime', 'format_classroom');
         // End Date Time.
         $mform->addElement('date_time_selector', 'session_date_end',
             get_string('sessiondatetime_end', 'format_classroom'), $option);
+        $mform->addHelpButton('session_date_end', 'sessiondatetime_end', 'format_classroom');
         $classrooms = $DB->get_records_sql('select id, location from {classroom_location} where isdeleted != ?', array(0));
         $key = array(null => 'Select Location');
         foreach ($classrooms as $classr) {
@@ -84,24 +94,51 @@ class session_edit_form extends moodleform {
             'javascript:get_states("'.$CFG->wwwroot.'", this.value,this.id);'),
             array('link' => $CFG->wwwroot.'/course/format/classroom/manage_location.php?cid='.$COURSE->id,
                 'target' => '_blank', 'label' => get_string('addlocation', 'format_classroom')));
-
+        $mform->addHelpButton('location', 'location', 'format_classroom');
         $mform->addRule('location', get_string('required'), 'required', null, 'client');
         $classroomlist = array(null => 'Select classroom');
         $mform->addElement('select', 'classroom', get_string('classroom', 'format_classroom') , $classroomlist);
         $mform->setType('classroom', PARAM_RAW);
+        $mform->addHelpButton('classroom', 'classroom', 'format_classroom');
         $mform->addRule('classroom', get_string('required'), 'required', null, 'client');
+        $roles = $DB->get_records_sql('select * from {role}
+            where (shortname = ? OR shortname = ?)', array('editingteacher', 'teacher'));
+        $contextid = context_course::instance($courseid);
+        $arrayteachername = array();
+        $arrayteacherid = array();
+
+        foreach ($roles as $key => $role) {
+            $teachers = get_role_users($role->id, $contextid);
+            foreach ($teachers as $key => $teacher) {
+                $teachername = $teacher->firstname.' '.$teacher->lastname;
+                $teacherid = $teacher->id;
+                array_push($arrayteacherid, $teacherid);
+                array_push($arrayteachername, $teachername);
+            }
+        }
+
+        $teacherlistselect = array(null => 'Select Teacher');
+        $teacherlists = array_combine($arrayteacherid, $arrayteachername);
+        $listofteacher = $teacherlistselect + $teacherlists;
+
+        $mform->addElement('selectwithlink', 'teacher', get_string('selectteacher', 'format_classroom') ,
+            $listofteacher, array(), array('link' => $CFG->wwwroot.'/user/index.php?id='.$courseid,
+                'label' => 'Assign Teacher Role'));
+        $mform->addHelpButton('teacher', 'selectteacher', 'format_classroom');
+        $mform->setType('teacher', PARAM_RAW);
+        $mform->addRule('teacher', get_string('required'), 'required', null, 'client');
 
         $mform->addElement('text', 'maxenrol', get_string('maxenrol', 'format_classroom'));
         $mform->setType('maxenrol', PARAM_RAW);
+        $mform->addHelpButton('maxenrol', 'maxenrol', 'format_classroom');
         $mform->addRule('maxenrol', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
         $mform->addRule('maxenrol', get_string('required'), 'required', null, 'client');
+        $mform->addRule('maxenrol', get_string('negativenumber', 'format_classroom'), 'regex', '/^[1-9]\d*$/', 'client');
         $mform->setDefault('maxenrol', 20);
-        $mform->addElement('date_time_selector', 'last_subscription_date',
-            get_string('lastsubscriptiondate', 'format_classroom'), $option);
-        $mform->addRule('last_subscription_date', get_string('required'), 'required', null, 'client');
 
         $mform->addElement('textarea', 'other_details',
             get_string("otherdetails", "format_classroom"), 'rows="5" cols="35" maxlength="5000"');
+        $mform->addHelpButton('other_details', 'otherdetails', 'format_classroom');
         $mform->addRule('other_details', get_string('required'), 'required', null, 'client');
         $mform->setType('other_details', PARAM_RAW);
         $mform->addElement('html', '<div class="form-group row"><div class="col-md-9 charpostion">5000 Character</div></div>');
@@ -112,7 +149,9 @@ class session_edit_form extends moodleform {
             $mform->setDefault('session_date_end', $checkexits->session_date_end);
             $mform->setDefault('location', $checkexits->location);
             $mform->setDefault('classroom', $checkexits->classroom);
+            $mform->setDefault('teacher', $checkexits->teacher);
             $mform->setDefault('maxenrol', $checkexits->maxenrol);
+            $mform->setDefault('last_subscription_date_from', $checkexits->last_subscription_date_from);
             $mform->setDefault('last_subscription_date', $checkexits->last_subscription_date);
             $mform->setDefault('other_details', $checkexits->other_details);
         }
@@ -135,7 +174,11 @@ class session_edit_form extends moodleform {
         $seesionstartdate = $data['session_date'];
         $seesionenddate = $data['session_date_end'];
         $coursestartdate = $getcoursedetails->startdate;
-        $courseenddate = $getcoursedetails->enddate + 24 * 60 * 59.9;
+        if ( $getcoursedetails->enddate != 0 ) {
+            $courseenddate = $getcoursedetails->enddate + 24 * 60 * 59.9;
+        } else {
+            $courseenddate = 0;
+        }
         $errors['session_date_end'] = '';
         $errors['session_date'] = '';
 
@@ -184,21 +227,51 @@ class session_edit_form extends moodleform {
             $errors['session_date'] = get_string('invalidsessiondatecurrent', 'format_classroom');
         }
 
-        // Session start date must be grather than course state date.
-        if ( $seesionenddate > $courseenddate ) {
-            $errors['session_date_end'] = get_string('invalidsessiondateenddate', 'format_classroom');
+        $sqlsessionother = "SELECT * FROM {classroom_session}
+        WHERE ((session_date BETWEEN ".$data['session_date']." AND ".$data['session_date_end'].")
+        OR (session_date_end BETWEEN ".$data['session_date']." AND ".$data['session_date_end'].")
+        OR (session_date <= ".$data['session_date']." AND session_date_end >= ".$data['session_date_end']."))
+        AND teacher = ? AND id != ?";
+        $resultsessionothers = $DB->get_records_sql($sqlsessionother, array($data['teacher'], $data['session_id']));
+
+        if (!empty($resultsessionothers)) {
+            $errors['teacher'] = 'Teacher is already booked for another session. 1';
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
 
-        // Last subscription date should be less than current date time.
+        if ( $courseenddate != 0 ) {
+            // Session start date must be grather than course state date.
+            if ( $seesionenddate > $courseenddate ) {
+                $errors['session_date_end'] = get_string('invalidsessiondateenddate', 'format_classroom');
+                $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
+            }
+        }
+
+        // Subscription date from should be less than current date time.
+        if ($data['last_subscription_date_from'] < time()) {
+            $errors['last_subscription_date_from'] = get_string('lastsubscriptiontimefrom', 'format_classroom');
+            $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
+        }
+
+        if ($startday < $data['last_subscription_date_from']) {
+            $errors['last_subscription_date_from'] = get_string('lsubdatefrom', 'format_classroom');
+            $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
+        }
+
+        // Subscription date from should be less than current date time.
         if ($data['last_subscription_date'] < time()) {
             $errors['last_subscription_date'] = get_string('lastsubscriptiontime', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
 
-        // Last subscription date should be grather than session start date.
-        if ($startday < $data['last_subscription_date']) {
-            $errors['last_subscription_date'] = get_string('lastsubscriptiondatelessthenstart', 'format_classroom');
+        // Subscription date from should be grather than Subscription date to.
+        if ($data['last_subscription_date'] < $data['last_subscription_date_from']) {
+            $errors['last_subscription_date'] = get_string('tosublesssubdate', 'format_classroom');
+            $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
+        }
+
+        if ($endday < $data['last_subscription_date']) {
+            $errors['last_subscription_date'] = get_string('tosublesssend', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
 

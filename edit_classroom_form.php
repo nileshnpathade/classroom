@@ -52,18 +52,33 @@ class classroom_edit_form extends moodleform {
         $mform->addElement('header', 'update_classroom', get_string('update_classroom', 'format_classroom'));
         $mform->addElement('text', 'classroom', get_string('classroom', 'format_classroom'));
         $mform->setType('classroom', PARAM_RAW);
+        $mform->addHelpButton('classroom', 'classroom', 'format_classroom');
         $mform->addRule('classroom', get_string('required'), 'required', null, 'client');
 
-        $mform->addElement('textarea', 'details', get_string("details", "format_classroom"), 'rows="5" cols="19" maxlength="5000"');
-        $mform->setType('details', PARAM_RAW);
-        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-9 characterlable">5000 Character</div></div>');
+        $mform->addElement('text', 'emailid', get_string('emailid', 'format_classroom'));
+        $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
+        $mform->addHelpButton('emailid', 'emailid', 'format_classroom');
+        $mform->setType('emailid', PARAM_RAW);
+
+        $mform->addElement('text', 'phoneno', get_string('phoneno', 'format_classroom'));
+        $mform->addHelpButton('phoneno', 'phoneno', 'format_classroom');
+        $mform->addRule('phoneno', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
+        $mform->setType('phoneno', PARAM_RAW);
+
         $mform->addElement('text', 'seats', get_string('seats', 'format_classroom'));
         $mform->setType('seats', PARAM_RAW);
+        $mform->addHelpButton('seats', 'seats', 'format_classroom');
         $mform->addRule('seats', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
         $mform->addRule('seats', get_string('required'), 'required', null, 'client');
+        $mform->addRule('seats', get_string('negativenumber', 'format_classroom'), 'regex', '/^[1-9]\d*$/', 'client');
+        $mform->addElement('textarea', 'details', get_string("details", "format_classroom"), 'rows="5" cols="19" maxlength="5000"');
+        $mform->addHelpButton('details', 'details', 'format_classroom');
+        $mform->setType('details', PARAM_RAW);
+        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-9 characterlable">5000 Character</div></div>');
 
         $mform->addElement('textarea', 'equipment', get_string("equipment", "format_classroom"), 'rows="5" cols="19" maxlength="5000"');
         $mform->setType('equipment', PARAM_RAW);
+        $mform->addHelpButton('equipment', 'equipment', 'format_classroom');
         $mform->addElement('html', '<div class="form-group row  fitem"> <div class="col-md-9 characterlable">5000 Character</div></div>');
         $this->add_action_buttons(true, 'Submit');
     }
@@ -78,6 +93,11 @@ class classroom_edit_form extends moodleform {
         $err = array();
         if ($data['seats'] <= 0) {
             $err['seats'] = get_string('zeroseats', 'format_classroom');
+        }
+        if ($data['emailid']) {
+            if (!validate_email($data['emailid'])) {
+                $err['emailid'] = get_string('invalidemail');
+            }
         }
         $classroom = $data['classroom'];
         $locationid = $data['location_id'];

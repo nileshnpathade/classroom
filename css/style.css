@@ -25,16 +25,26 @@
 }
 .card-header:after {
     content: '\2212';
-    color: #fff;
+    color: #0f77d1;
     font-weight: bold;
     float: right;
+    background: #fff;
+    font-size: 20px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 22px;
+    margin: 0px -7px 0px 0px;
 }
 .managebody{
-    padding: 20px 50px 10px 50px;
+    padding: 20px 20px 20px 20px;
+    border: 1px solid #dfdfdf;
+    margin: -3px 1px 0px 1px;
 }
 .collapsed .card-header:after {
     content: '\002B';
-    color: #fff;
+    color: #0f77d1;
     font-weight: bold;
 }
 .card-link .collapsed{
@@ -116,7 +126,7 @@
 */
 .charpostion{
     float:right;
-    width: 53%;
+    width: 45%;
     font-size:10px;
 }
 
@@ -143,4 +153,9 @@ a .iconactive{
 }
 .valign td{
     vertical-align: text-top;
+
+    background: #fff;
+    border: 1px solid #dfdfdf;
+    padding: 5px 10px;
+    width: 25%;
 }

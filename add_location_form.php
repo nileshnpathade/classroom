@@ -46,6 +46,7 @@ class simplehtml_form_location extends moodleform {
         $mform = $this->_form;  // Don't forget the underscore!
         $mform->addElement('hidden', 'cid');
         $mform->setType('cid', PARAM_INT);
+        // Google Map API link.
         $mform->addElement('html', '<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M"></script>');
 
         $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/myjavascript.js'));
@@ -53,17 +54,22 @@ class simplehtml_form_location extends moodleform {
 
         $mform->addElement('text', 'location', get_string('location', 'format_classroom'), 'placeholder="Enter Location Name"');
         $mform->setType('location', PARAM_RAW);
+        $mform->addHelpButton('location', 'location', 'format_classroom');
         $mform->addRule('location', get_string('required'), 'required', null, 'client');
 
         $mform->addElement('text', 'address', get_string('address', 'format_classroom'), 'placeholder="Enter Address"');
         $mform->setType('address', PARAM_RAW);
+        $mform->addHelpButton('address', 'address', 'format_classroom');
         $mform->addRule('address', get_string('required'), 'required', null, 'client');
 
         $mform->addElement('text', 'phoneno', get_string('phoneno', 'format_classroom'), 'placeholder="Enter Phone Number"');
         $mform->setType('phoneno', PARAM_RAW);
+        $mform->addHelpButton('phoneno', 'phoneno', 'format_classroom');
         $mform->addRule('phoneno', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
 
         $mform->addElement('text', 'emailid', get_string('emailid', 'format_classroom'), 'placeholder="Enter Email ID"');
+        $mform->addHelpButton('emailid', 'emailid', 'format_classroom');
+        $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
         $mform->setType('emailid', PARAM_RAW);
 
         $mform->addElement('html', '<div id="map"></div>');
@@ -87,16 +93,18 @@ class simplehtml_form_location extends moodleform {
     public function validation($data, $files) {
         global $CFG, $DB;
         $err = array();
+        // Email validation.
         if ($data['emailid']) {
             if (!validate_email($data['emailid'])) {
                 $err['emailid'] = get_string('invalidemail');
             }
         }
+        // Location required validation.
         if (empty(trim($data['location']))) {
             $err['location'] = get_string('required');
         }
-
-        $results = $DB->get_records_sql("select * from {classroom_location} where isdeleted != 0 AND location=?" ,  array($data['location']));
+        // Classroom location duplicated validation.
+        $results = $DB->get_records_sql("select * from {classroom_location} where isdeleted != 0 AND location=?" , array($data['location']));
         if (!empty($results)) {
             $err['location'] = get_string('duplicatelocation', 'format_classroom');
         }

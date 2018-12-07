@@ -51,7 +51,7 @@ class location_edit_form extends moodleform {
         $address = $this->_customdata['address'];
         $phoneno = $this->_customdata['phoneno'];
         $emailid = $this->_customdata['emailid'];
-        $script = '<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAagk3rf5yEU6pZBaosT-A1Dkge5DHAJic"></script>';
+        $script = '<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M"></script>';
 
         $mform->addElement('html', $script);
 
@@ -62,17 +62,21 @@ class location_edit_form extends moodleform {
         $mform->addElement('header', 'update_location', get_string('update_location', 'format_classroom'));
         $mform->addElement('text', 'location', get_string('location', 'format_classroom'), 'placeholder="Enter Location Name"');
         $mform->setType('location', PARAM_RAW);
-
+        $mform->addHelpButton('location', 'location', 'format_classroom');
         $mform->addRule('location', get_string('required'), 'required', null, 'client');
-        $mform->addElement('text', 'address', get_string('address', 'format_classroom'), 'placeholder="Enter Address"');
-        $mform->setType('address', PARAM_RAW);
 
+        $mform->addElement('text', 'address', get_string('address', 'format_classroom'), 'placeholder="Enter Address"');
+        $mform->addHelpButton('location', 'location', 'format_classroom');
+        $mform->setType('address', PARAM_RAW);
+        $mform->addHelpButton('address', 'address', 'format_classroom');
         $mform->addRule('address', get_string('required'), 'required', null, 'client');
         $mform->addElement('text', 'phoneno', get_string('phoneno', 'format_classroom'), 'placeholder="Enter Phone Number"');
         $mform->setType('phoneno', PARAM_RAW);
-
+        $mform->addHelpButton('phoneno', 'phoneno', 'format_classroom');
         $mform->addRule('phoneno', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
         $mform->addElement('text', 'emailid', get_string('emailid', 'format_classroom'), 'placeholder="Enter Email ID"');
+        $mform->addHelpButton('emailid', 'emailid', 'format_classroom');
+        $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
         $mform->setType('emailid', PARAM_RAW);
 
         $mform->addElement('html', '<div id="map"></div>');
@@ -95,7 +99,8 @@ class location_edit_form extends moodleform {
         if (empty(trim($data['location']))) {
             $err['location'] = get_string('required');
         }
-        $results = $DB->get_records_sql("SELECT * FROM {classroom_location} WHERE isdeleted != 0 AND location=? AND id != ?" ,  array($data['location'], $data['cid']));
+        $results = $DB->get_records_sql("SELECT * FROM {classroom_location} WHERE isdeleted != 0 AND location=? AND id != ?",
+            array($data['location'], $data['cid']));
         if (!empty($results)) {
             $err['location'] = get_string('duplicatelocation', 'format_classroom');
         }

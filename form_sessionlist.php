@@ -48,7 +48,8 @@ $table->id = 'myTable';
 $table->head = array('Session Name',
     'Session Start Date',
     'Session End Date',
-    'Last Subscription Date',
+    'Subscription Date From',
+    'Subscription Date To',
     'Duration',
     'Location',
     'Actions');
@@ -63,6 +64,7 @@ foreach ($results as $re) {
     $sessiondate = $re->session_date;
     $sessiondateend = $re->session_date_end;
     $lastsubscriptiondate = $re->last_subscription_date;
+    $lastsubscriptiondatefrom = $re->last_subscription_date_from;
     $location = $re->location;
     $classroom = $re->classroom;
     $maxenrol = $re->maxenrol;
@@ -74,8 +76,8 @@ foreach ($results as $re) {
     $icondelete = '<i class="icon fa fa-trash fa-fw "></i>';
     $viewicon = '<i class="icon fa fa-eye fa-fw"></i>';
     $link = '';
-    $dataatt = 'data-toggle="modal" data-backdrop="static"';
-    if ($sessiondateend >= time()) {
+    $dataatt = 'data-toggle="modal"';
+    if ($sessiondate >= time()) {
         $link = '<a href = '.$CFG->wwwroot.'/'.$linkurl1.' title="Edit" >'.$iconedit.'</a>&nbsp;';
         $link .= '<a  href="'.$CFG->wwwroot.'/'.$linkurl2.'" title="Delete">'.$icondelete.'</a>';
         $link .= '<a href="#" '.$dataatt.' data-target="#myModal'.$cid.'" title="View">'.$viewicon.'</a>';
@@ -94,7 +96,8 @@ foreach ($results as $re) {
     }
     if ($j >= 0) {
         $table->data[] = array($session, date('d-m-Y H:i', $sessiondate),
-        date('d-m-Y H:i', $sessiondateend), date('d-m-Y H:i', $lastsubscriptiondate) , $duration, $getlocation->location, $link);
+        date('d-m-Y H:i', $sessiondateend), date('d-m-Y H:i', $lastsubscriptiondatefrom),
+        date('d-m-Y H:i', $lastsubscriptiondate) , $duration, $getlocation->location, $link);
     }
     $j++;
     $hide1 = '<span id="hide" class="substr"> Hide </span>';
@@ -112,11 +115,14 @@ foreach ($results as $re) {
     $popupcontent .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
     $popupcontent .= '</div> <div class="modal-body custombody">';
     $popupcontent .= '<table style="margin-left: 10px;">';
-    $popupcontent .= '<tr> <th>'.get_string("location", "format_classroom").' : </th> <td>'.$getlocation->location.'</td> </tr>';
-    $popupcontent .= '<tr> <th>'.get_string("classroom", "format_classroom").' : </th> <td>'.$getclassroom->classroom.'</td> </tr>';
-    $popupcontent .= '<tr> <th>'.get_string("maxenrol", "format_classroom").' :&nbsp; &nbsp; </th> <td>'.$maxenrol.'</td> </tr>';
-    $popupcontent .= '<tr id="hidethis"> <th>'.get_string("otherdetails", "format_classroom").' : &nbsp; </th> <td>'.$details1.'</td> </tr>';
-    $popupcontent .= '<tr id="hidethis1" class="hidden" valign="top"> <th>'.get_string("otherdetails", "format_classroom").' : &nbsp; </th> <td>'.$hideeetails.'</td> </tr>';
+    $popupcontent .= '<tr> <th>'.get_string("location", "format_classroom").'  </th> <td>'.$getlocation->location.'</td> </tr>';
+    $popupcontent .= '<tr> <th>'.get_string("classroom", "format_classroom").'  </th> <td>'.$getclassroom->classroom.'</td> </tr>';
+    $popupcontent .= '<tr> <th>'.get_string("maxenrol", "format_classroom").' &nbsp; &nbsp; </th> <td>'.$maxenrol.'</td> </tr>';
+    $popupcontent .= '<tr id="hidethis"> <th>'.get_string("otherdetails", "format_classroom").'&nbsp; </th>';
+    $popupcontent .= '<td>'.$details1.'</td> </tr>';
+    $popupcontent .= '<tr id="hidethis1" class="hidden" valign="top"> <th>
+    '.get_string("otherdetails", "format_classroom").'&nbsp;</th>';
+    $popupcontent .= '<td>'.$hideeetails.'</td> </tr>';
     $popupcontent .= '</table> </div> <div class="modal-footer">';
     $popupcontent .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
     $popupcontent .= '</div> </div> </div> </div>';

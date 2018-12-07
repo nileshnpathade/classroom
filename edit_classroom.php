@@ -50,6 +50,8 @@ if ($userdata = $DB->get_record('classroom', array('id' => $cid))) {
     $details = $userdata->details;
     $seats = $userdata->seats;
     $equipment = $userdata->equipment;
+    $emailid = $userdata->emailid;
+    $phoneno = $userdata->phoneno;
 }
 $args = array();
 $args = array(
@@ -58,7 +60,9 @@ $args = array(
     'details' => $details,
     'seats' => $seats,
     'equipment' => $equipment,
-    'location_id' => $locationid
+    'location_id' => $locationid,
+    'emailid' => $emailid,
+    'phoneno' => $phoneno
 );
 
 $mform = new classroom_edit_form(null, $args);
@@ -71,6 +75,8 @@ if ($mform->is_cancelled()) {
     $studentrecord->classroom  = (isset($fromform->classroom)) ? $fromform->classroom : '';
     $studentrecord->details  = (isset($fromform->details)) ? $fromform->details : '';
     $studentrecord->seats  = (isset($fromform->seats)) ? $fromform->seats : '';
+    $studentrecord->emailid  = (isset($fromform->emailid)) ? $fromform->emailid : '';
+    $studentrecord->phoneno  = (isset($fromform->phoneno)) ? $fromform->phoneno : '';
     $studentrecord->equipment  = (isset($fromform->equipment)) ? $fromform->equipment : '';
 
     $updateid = $DB->update_record('classroom', $studentrecord);
