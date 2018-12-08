@@ -15,13 +15,13 @@
  * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-.card-header{
-    background-color:#1177d1!important;
-    color:#FFF!important;
+.card-header {
+    background-color: #1177d1 !important;
+    color: #fff !important;
 }
-.card-header:title{
-    content:'';
-    display:'none';
+.card-header: title {
+    content: '';
+    display: 'none';
 }
 .card-header:after {
     content: '\2212';
@@ -35,53 +35,53 @@
     border-radius: 50%;
     text-align: center;
     line-height: 22px;
-    margin: 0px -7px 0px 0px;
+    margin: 0 -7px 0 0;
 }
-.managebody{
+.managebody {
     padding: 20px 20px 20px 20px;
     border: 1px solid #dfdfdf;
-    margin: -3px 1px 0px 1px;
+    margin: -3px 1px 0 1px;
 }
 .collapsed .card-header:after {
     content: '\002B';
     color: #0f77d1;
     font-weight: bold;
 }
-.card-link .collapsed{
-    color: #FFF;
+.card-link .collapsed {
+    color: #fff;
 }
-.modal-header h4{
-    float:left;
+.modal-header h4 {
+    float: left;
 }
 .mangesession {
-    color:#FFF;
+    color: #fff;
 }
-.mangesession:disabled{
-    color:#000;
+.mangesession:disabled {
+    color: #000;
 }
-.mangesession{
-    color:#FFF;
+.mangesession {
+    color: #fff;
 }
 
-#buttoneditmenuend{
-    background-color: #FFF;
+#buttoneditmenuend {
+    background-color: #fff;
     border-color: #1177d1;
     color:#000;
 }
-#buttoneditmenuend:hover{
-    background-color:#FFF;
+#buttoneditmenuend:hover {
+    background-color: #fff;
 }
-.btn-secondary:active:hover{
-    background-color:#FFF;
+.btn-secondary:active:hover {
+    background-color: #fff;
 }
-.modal-dialog{
-    max-width:650px;
+.modal-dialog {
+    max-width: 650px;
 }
-.popuptable{
+.popuptable {
     margin-left: 10px;
 }
-.modal-header h4{
-    float:left;
+.modal-header h4 {
+    float: left;
 }
 .modal-body table th {
     width: 100px;
@@ -89,71 +89,70 @@
 .custombody table th {
     width: 180px;
 }
-#search{
-    max-width:20%;
-    float:right;
+#search {
+    max-width: 20%;
+    float: right;
 }
 
 /* Add Session, Add Classroom And Add Location Button CSS. */
-.addbtn{
-    float:left;
+.addbtn {
+    float: left;
 }
-.nodatatodisplay{
-    color:#3A3D3E;
+.nodatatodisplay {
+    color: #3a3d3e;
 }
-.substr{
-    cursor:pointer;
-    font-weight:bold;
+.substr {
+    cursor: pointer;
+    font-weight: bold;
 }
-.noactive{
-    background-color:gray;
-    padding:5px;
+.noactive {
+    background-color: gray;
+    padding: 5px;
 }
-.assingspan{
-    padding:5px;
-    background-color:#1177d1;
+.assingspan {
+    padding: 5px;
+    background-color: #1177d1;
 }
-.assingspan a{
-    color:#FFF;
-    text-decoration:none;
+.assingspan a {
+    color: #fff;
+    text-decoration: none;
 }
-.nodata{
-    display:none;
+.nodata {
+    display: none;
 }
 
 /*
     Session Page
 */
-.charpostion{
-    float:right;
+.charpostion {
+    float: right;
     width: 45%;
-    font-size:10px;
+    font-size: 10px;
 }
 
-.characterlable{
-    float:right;
+.characterlable {
+    float: right;
     width: 61%;
-    font-size:10px;
+    font-size: 10px;
 }
 
 /*
     MAP - Location Page
 */
-#map{
-    height:200px;
+#map {
+    height: 200px;
 }
 
-a .icondective{
+a .icondective {
     color: #1177d1;
 }
 
-a .iconactive{
+a .iconactive {
     color: #262626;
     cursor: text;
 }
-.valign td{
+.valign td {
     vertical-align: text-top;
-
     background: #fff;
     border: 1px solid #dfdfdf;
     padding: 5px 10px;
