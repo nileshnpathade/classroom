@@ -16,12 +16,12 @@
 */
 
 .card-header {
-    background-color: #1177d1 !important;
-    color: #fff !important;
+    background-color: #1177d1;
+    color: #fff;
 }
 .card-header: title {
     content: '';
-    display: 'none';
+    display: none;
 }
 .card-header:after {
     content: '\2212';
@@ -66,7 +66,7 @@
 #buttoneditmenuend {
     background-color: #fff;
     border-color: #1177d1;
-    color:#000;
+    color: #000;
 }
 #buttoneditmenuend:hover {
     background-color: #fff;

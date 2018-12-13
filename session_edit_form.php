@@ -53,6 +53,7 @@ class session_edit_form extends moodleform {
         $mform->addElement('hidden', 'courseid', $courseid);
         $mform->setType('courseid', PARAM_INT);
 
+        // Session id store in hidden.
         $mform->addElement('hidden', 'session_id', $sessionid);
         $mform->setType('session_id', PARAM_INT);
 
@@ -61,7 +62,7 @@ class session_edit_form extends moodleform {
         $mform->addHelpButton('session', 'session', 'format_classroom');
         $mform->addRule('session', get_string('required'), 'required', null, 'client');
 
-        $option = array(
+        $option_fordateformat = array(
             'startyear' => date('Y'),
             'stopyear'  => 2090,
             'timezone'  => 99,
@@ -69,29 +70,28 @@ class session_edit_form extends moodleform {
         );
 
         $mform->addElement('date_time_selector', 'last_subscription_date_from',
-            get_string('lastsubscriptiondatefrom', 'format_classroom') , $option);
+            get_string('lastsubscriptiondatefrom', 'format_classroom') , $option_fordateformat);
         $mform->addHelpButton('last_subscription_date_from', 'lastsubscriptiondatefrom', 'format_classroom');
 
         $mform->addElement('date_time_selector', 'last_subscription_date',
-            get_string('lastsubscriptiondateto', 'format_classroom'), $option);
+            get_string('lastsubscriptiondateto', 'format_classroom'), $option_fordateformat);
         $mform->addHelpButton('last_subscription_date', 'lastsubscriptiondateto', 'format_classroom');
 
         // Start Date Time.
-        $mform->addElement('date_time_selector', 'session_date', get_string('sessiondatetime', 'format_classroom') , $option);
+        $mform->addElement('date_time_selector', 'session_date', get_string('sessiondatetime', 'format_classroom') , $option_fordateformat);
         $mform->addHelpButton('session_date', 'sessiondatetime', 'format_classroom');
         // End Date Time.
         $mform->addElement('date_time_selector', 'session_date_end',
-            get_string('sessiondatetime_end', 'format_classroom'), $option);
+            get_string('sessiondatetime_end', 'format_classroom'), $option_fordateformat);
         $mform->addHelpButton('session_date_end', 'sessiondatetime_end', 'format_classroom');
         $classrooms = $DB->get_records_sql('select id, location from {format_classroom_location} where isdeleted != ?', array(0));
-        $key = array(null => 'Select Location');
-        foreach ($classrooms as $classr) {
-            $key[$classr->id] = $classr->location;
+        $key_arr = array(null => 'Select Location');
+        foreach ($classrooms as $classroomsvalue) {
+            $key_arr[$classroomsvalue->id] = $classroomsvalue->location;
         }
 
-        $attributes = array();
         $mform->addElement('selectwithlink', 'location', get_string('location',
-            'format_classroom'), $key, array('onchange' =>
+            'format_classroom'), $key_arr, array('onchange' =>
             'javascript:get_states("'.$CFG->wwwroot.'", this.value,this.id);'),
             array('link' => $CFG->wwwroot.'/course/format/classroom/manage_location.php?cid='.$COURSE->id,
                 'target' => '_blank', 'label' => get_string('addlocation', 'format_classroom')));
@@ -108,9 +108,9 @@ class session_edit_form extends moodleform {
         $arrayteachername = array();
         $arrayteacherid = array();
 
-        foreach ($roles as $key => $role) {
+        foreach ($roles as $key_val => $role) {
             $teachers = get_role_users($role->id, $contextid);
-            foreach ($teachers as $key => $teacher) {
+            foreach ($teachers as $key_val => $teacher) {
                 $teachername = $teacher->firstname.' '.$teacher->lastname;
                 $teacherid = $teacher->id;
                 array_push($arrayteacherid, $teacherid);
