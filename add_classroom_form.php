@@ -72,15 +72,15 @@ class addclassroom_form extends moodleform {
         $mform->addRule('seats', get_string('required'), 'required', null, 'client');
         $mform->addRule('seats', get_string('negativenumber', 'format_classroom'), 'regex', '/^[1-9]\d*$/', 'client');
 
-        $mform->addElement('textarea', 'details', get_string("details", "format_classroom"), 'rows="5" cols="19" maxlength="5000"');
+        $mform->addElement('textarea', 'details', get_string("details", "format_classroom"),
+            'rows="5" cols="19" maxlength="5000"');
         $mform->addHelpButton('details', 'details', 'format_classroom');
         $mform->setType('details', PARAM_RAW);
-        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-9 characterlable">5000 Character</div></div>');
 
-        $mform->addElement('textarea', 'equipment', get_string("equipment", "format_classroom"), 'rows="5" cols="19" maxlength="5000"');
+        $mform->addElement('textarea', 'equipment', get_string("equipment", "format_classroom"),
+            'rows="5" cols="19" maxlength="5000"');
         $mform->addHelpButton('equipment', 'equipment', 'format_classroom');
         $mform->setType('equipment', PARAM_RAW);
-        $mform->addElement('html', '<div class="form-group row fitem"><div class="col-md-9 characterlable">5000 Character</div></div>');
         $this->add_action_buttons(true, 'Submit');
     }
 
@@ -105,7 +105,8 @@ class addclassroom_form extends moodleform {
         // Check classroom is duplicate or not.
         $classroom = $data['classroom'];
         $locationid = $data['location_id'];
-        $getclassroom = $DB->get_record('classroom', array('classroom' => $classroom, 'isdeleted' => 1, 'location_id' => $locationid));
+        $getclassroom = $DB->get_record('format_classroom', array('classroom' => $classroom,
+            'isdeleted' => 1, 'location_id' => $locationid));
         if ( !empty($getclassroom) ) {
             $err['classroom'] = get_string('duplicateclassroom', 'format_classroom');
         }

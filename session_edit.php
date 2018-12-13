@@ -48,7 +48,7 @@ if (!$PAGE->user_is_editing()) {
     redirect($CFG->wwwroot);
 }
 $classroomid = 0;
-$checkexits = $DB->get_record('classroom_session', array('id' => $sessionid));
+$checkexits = $DB->get_record('format_classroom_session', array('id' => $sessionid));
 if (!empty($checkexits)) {
     $classroomid = $checkexits->classroom;
 }
@@ -79,7 +79,7 @@ if ($mform->is_cancelled()) {
     $classroomsession->other_details = (isset($fromform->other_details)) ? $fromform->other_details : '';
     $classroomsession->create_by = (isset($USER->id)) ? $USER->id : '';
 
-    $updatedid = $DB->update_record('classroom_session', $classroomsession);
+    $updatedid = $DB->update_record('format_classroom_session', $classroomsession);
     if ($updatedid > 0) {
         $redirecturl = $CFG->wwwroot.'/course/view.php?id='.$fromform->courseid;
         $redirecturl .= '&editmenumode=true&menuaction=sessionlist&token=1';

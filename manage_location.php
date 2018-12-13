@@ -44,7 +44,8 @@ $courseid = optional_param('cid', 0, PARAM_INT);
 echo $OUTPUT->header();
 $addurl = 'course/format/classroom/add_location.php';
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/search.js'));
-$PAGE->requires->js( new moodle_url('https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M'));
+$PAGE->requires->js( new
+    moodle_url('https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/viewmap.js'));
 $out = '';
 $out .= html_writer::empty_tag('input', array('type' => 'text',
@@ -56,8 +57,8 @@ echo '<a class="btn btn-primary addbtn" href="'.$CFG->wwwroot.'/'.$addurl.'" tit
 get_string('addlocation', 'format_classroom') .' </a><br/><br/><br/>';
 
 $start = $page * $perpage;
-$results1 = $DB->get_records_sql("SELECT * FROM {classroom_location} WHERE isdeleted != 0", array());
-$results = $DB->get_records_sql("SELECT * FROM {classroom_location} WHERE isdeleted != 0 LIMIT $start, $perpage" ,  array());
+$results1 = $DB->get_records_sql("SELECT * FROM {format_classroom_location} WHERE isdeleted != 0", array());
+$results = $DB->get_records_sql("SELECT * FROM {format_classroom_location} WHERE isdeleted != 0 LIMIT $start, $perpage" ,  array());
 echo "<style> td.cell.c3.lastcol{ padding-left:0px; } </style>";
 $table = new html_table();
 $table->id = 'myTable';
@@ -71,7 +72,7 @@ foreach ($results as $re) {
     $address = $re->address;
     $phoneno = $re->phoneno;
     $emailid = $re->emailid;
-    $classroomdisplayname = $DB->get_records('classroom', array('location_id' => $cid, 'isdeleted' => 1));
+    $classroomdisplayname = $DB->get_records('format_classroom', array('location_id' => $cid, 'isdeleted' => 1));
     $addurl = $CFG->wwwroot.'/course/format/classroom/add_classroom.php?location_id='.$cid;
     if (empty($classroomdisplayname)) {
         $clurl = $CFG->wwwroot.'/course/format/classroom/manage_classroom.php?location_id='.$cid;

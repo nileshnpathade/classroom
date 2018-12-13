@@ -372,7 +372,7 @@ class format_classroom extends format_base {
      *
      * @param $section section of course format.
      * @param $action action of course format.
-     * @param $sr.
+     * @param $sr string.
      * @return array()
      */
     public function section_action($section, $action, $sr) {

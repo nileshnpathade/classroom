@@ -15,7 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Attendance form.
  * Display attendance status.
  *
  * @package   format_classroom
@@ -39,7 +38,7 @@ $out .= html_writer::start_tag('form', array('name' => 'attendanceform',
     'id' => 'attendanceform', 'action' => $CFG->wwwroot.'/'.$acurl,
     'method' => 'post'));
 
-$getsession = $DB->get_records('classroom_session', array('isdeleted' => 1, 'courseid' => $COURSE->id));
+$getsession = $DB->get_records('format_classroom_session', array('isdeleted' => 1, 'courseid' => $COURSE->id));
 $key = array();
 
 $k = 0;
@@ -65,7 +64,7 @@ if ($sesseid != 0) {
     AND cxt.instanceid = c.id
     AND c.id = '$COURSE->id'
     AND u.id != 1 AND u.id != 2
-    AND roleid = 5 AND  u.id  IN (SELECT ca.userid FROM {classroom_assignuser} as ca
+    AND roleid = 5 AND  u.id  IN (SELECT ca.userid FROM {format_classroom_assignuser} as ca
     WHERE ca.session_id = $sesseid)";
     $getenrolusers1 = $DB->get_records_sql($sql1, array());
 
@@ -77,7 +76,7 @@ if ($sesseid != 0) {
     AND cxt.instanceid = c.id
     AND c.id = '$COURSE->id'
     AND u.id != 1 AND u.id != 2
-    AND roleid = 5 AND  u.id  IN (SELECT ca.userid FROM {classroom_assignuser} as ca
+    AND roleid = 5 AND  u.id  IN (SELECT ca.userid FROM {format_classroom_assignuser} as ca
     WHERE ca.session_id = $sesseid) LIMIT $start,$perpage";
     $getenrolusers = $DB->get_records_sql($sql, array());
 } else {
@@ -99,7 +98,7 @@ foreach ($getenrolusers as $re) {
     $username = $re->username;
     $email = $re->email;
     if ($sesseid != 0) {
-        $getattendancsdetails = $DB->get_record('classroom_attendance',
+        $getattendancsdetails = $DB->get_record('format_classroom_attendance',
             array('sessionid' => $sesseid, 'courseid' => $COURSE->id,
             'userid' => $userid));
         $attendance = isset($getattendancsdetails->attendance) ? $getattendancsdetails->attendance : 'A';
@@ -138,7 +137,7 @@ $burl = 'course/view.php?id='.$COURSE->id.'&editmenumode=true&section=0&menuacti
 $baseurl = new moodle_url($CFG->wwwroot.'/'.$burl, array('sort' => 'location', 'dir' => 'ASC', 'perpage' => $perpage));
 echo $OUTPUT->paging_bar(count($getenrolusers1), $page, $perpage, $baseurl);
 
-$getsessiondate = $DB->get_record('classroom_session', array('id' => $sesseid));
+$getsessiondate = $DB->get_record('format_classroom_session', array('id' => $sesseid));
 $out1 = '';
 echo "<div class='nodata'><b class='nodatatodisplay'>".get_string('nodatatodisplay', 'format_classroom')."</b><br></div>";
 if ($j == 0) {

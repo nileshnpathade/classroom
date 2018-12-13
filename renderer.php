@@ -180,7 +180,8 @@ class format_classroom_renderer extends format_section_renderer_base {
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
         $context = context_course::instance($course->id);
-        $PAGE->requires->js( new moodle_url('https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M'));
+        $PAGE->requires->js(
+            new moodle_url('https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M'));
         $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/viewmap.js'));
         // Title with completion help icon.
         $completioninfo = new completion_info($course);
@@ -216,7 +217,7 @@ class format_classroom_renderer extends format_section_renderer_base {
         echo '<br/>';
         // If user enrol for course.
         if (empty($checkuserrole)) {
-            $sql = "select * from {classroom_session}  cs
+            $sql = "select * from {format_classroom_session}  cs
             where cs.isdeleted !=0 and cs.courseid=?
             and FROM_UNIXTIME(session_date_end,'%Y-%m-%d %H:%i') >= NOW()";
             $getsessiondetails1 = $DB->get_records_sql($sql, array($course->id));
@@ -254,7 +255,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "<td>".date('d-m-Y H:i', $sessiondetails->last_subscription_date_from)."</td>";
                 echo "<td><b>Session Location</b></td>";
                 echo "<td>";
-                $getlocation = $DB->get_record('classroom_location', array('id' => $sessiondetails->location));
+                $getlocation = $DB->get_record('format_classroom_location', array('id' => $sessiondetails->location));
                 $location = "<a href='#' data-toggle='modal' onclick='javascript:initAutocomplete()'
                 data-target='#mylocation".$c."'>".strip_tags(substr($getlocation->location, 0, 15))."...</a>";
                 echo $location;
@@ -265,7 +266,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "<td>".date('d-m-Y H:i', $sessiondetails->last_subscription_date)."</td>";
                 echo "<td><b>Session Classroom</b></td>";
                 echo "<td>";
-                $getclassroom = $DB->get_record('classroom', array('id' => $sessiondetails->classroom));
+                $getclassroom = $DB->get_record('format_classroom', array('id' => $sessiondetails->classroom));
                 $classroom = "<a href='#' data-toggle='modal' data-target='#myclassroom".$c."'
                 title='View'>".$getclassroom->classroom."</a>";
                 echo $classroom;
@@ -382,20 +383,20 @@ class format_classroom_renderer extends format_section_renderer_base {
             // If course not enrol.
             if ($PAGE->user_is_editing()) {
                 // User is editing, Admin, Manager, and Teacher.
-                $sql = "select * from {classroom_session}  cs
+                $sql = "select * from {format_classroom_session}  cs
                 where cs.isdeleted !=0 and cs.courseid=?
                 and FROM_UNIXTIME(session_date_end,'%Y-%m-%d %H:%i') >= NOW()";
                 $getsessiondetails2 = $DB->get_records_sql($sql, array($course->id));
             } else {
                 // For Admin user.
                 if (is_siteadmin()) {
-                    $sql = "select * from {classroom_session}  cs
+                    $sql = "select * from {format_classroom_session}  cs
                     where cs.isdeleted !=0 and cs.courseid=?
                     and FROM_UNIXTIME(session_date_end,'%Y-%m-%d %H:%i') >= NOW()";
                 } else {
                     // For student users.
-                    $sql = "select * from {classroom_session} cs
-                    INNER JOIN {classroom_assignuser} ca
+                    $sql = "select * from {format_classroom_session} cs
+                    INNER JOIN {format_classroom_assignuser} ca
                     ON cs.id=ca.session_id where cs.isdeleted !=0 and cs.courseid=?
                     and FROM_UNIXTIME(session_date_end,'%Y-%m-%d %H:%i') >= NOW() and ca.userid=?";
                 }
@@ -434,7 +435,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "<td>".date('d-m-Y H:i', $sessiondetails->last_subscription_date_from)."</td>";
                 echo "<td><b>Session Location</b></td>";
                 echo "<td>";
-                $getlocation = $DB->get_record('classroom_location', array('id' => $sessiondetails->location));
+                $getlocation = $DB->get_record('format_classroom_location', array('id' => $sessiondetails->location));
                 $location = "<a href='#' data-toggle='modal' onclick='javascript:initAutocomplete()'
                 data-target='#mylocation".$c."'>".strip_tags(substr($getlocation->location, 0, 15))."...</a>";
                 echo $location;
@@ -445,7 +446,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "<td>".date('d-m-Y H:i', $sessiondetails->last_subscription_date)."</td>";
                 echo "<td><b>Session Classroom</b></td>";
                 echo "<td>";
-                $getclassroom = $DB->get_record('classroom', array('id' => $sessiondetails->classroom));
+                $getclassroom = $DB->get_record('format_classroom', array('id' => $sessiondetails->classroom));
                 $classroom = "<a href='#' data-toggle='modal' data-target='#myclassroom".$c."'
                 title='View'>".$getclassroom->classroom."</a>";
                 echo $classroom;

@@ -47,7 +47,8 @@ class simplehtml_form_location extends moodleform {
         $mform->addElement('hidden', 'cid');
         $mform->setType('cid', PARAM_INT);
         // Google Map API link.
-        $mform->addElement('html', '<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M"></script>');
+        $mform->addElement('html', '<script
+        	src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M"></script>');
 
         $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/myjavascript.js'));
         $mform->addElement('header', 'addlocation', get_string('addlocation', 'format_classroom'));
@@ -74,7 +75,7 @@ class simplehtml_form_location extends moodleform {
 
         $mform->addElement('html', '<div id="map"></div>');
 
-        $classrooms = $DB->get_records_sql('select id,classroom from {classroom} where isdeleted != ?', array(0));
+        $classrooms = $DB->get_records_sql('select id,classroom from {format_classroom} where isdeleted != ?', array(0));
         $array = array();
         $key = array(null => 'Select Classroom');
         $i = 0;
@@ -104,7 +105,8 @@ class simplehtml_form_location extends moodleform {
             $err['location'] = get_string('required');
         }
         // Classroom location duplicated validation.
-        $results = $DB->get_records_sql("select * from {classroom_location} where isdeleted != 0 AND location=?" , array($data['location']));
+        $results = $DB->get_records_sql("select * from {format_classroom_location} where isdeleted != 0
+        	AND location=?" , array($data['location']));
         if (!empty($results)) {
             $err['location'] = get_string('duplicatelocation', 'format_classroom');
         }

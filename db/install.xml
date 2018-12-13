@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="course/format/classroom/db" VERSION="20181210" COMMENT="XMLDB file for Moodle course/format/classroom"
+<XMLDB PATH="course/format/classroom/db" VERSION="20181212" COMMENT="XMLDB file for Moodle course/format/classroom"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="classroom" COMMENT="Default comment for format_classroom, please edit me">
+    <TABLE NAME="format_classroom" COMMENT="Default comment for format_classroom, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="classroom" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false" COMMENT="Name of Classroom"/>
@@ -20,7 +20,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="classroom_location" COMMENT="Default comment for the table, please edit me">
+    <TABLE NAME="format_classroom_location" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="location" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
@@ -34,7 +34,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="classroom_session" COMMENT="Default comment for the table, please edit me">
+    <TABLE NAME="format_classroom_session" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="session" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
@@ -55,7 +55,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="classroom_assignuser" COMMENT="Assign user for classroom session.">
+    <TABLE NAME="format_classroom_assignuser" COMMENT="Assign user for classroom session.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="session_id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
@@ -66,7 +66,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="changeme" COMMENT="Default comment for the table, please edit me">
+    <TABLE NAME="format_classroom_attendance" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>

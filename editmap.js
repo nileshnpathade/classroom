@@ -31,7 +31,7 @@ initAutocomplete();
 function initAutocomplete() {
     var geocoder = new google.maps.Geocoder();
     var address = document.getElementById('id_address').value;
-    geocoder.geocode( { 'address': address}, function(results, status) {
+    geocoder.geocode( { 'address': address }, function ( results, status ) {
 
         if (status == google.maps.GeocoderStatus.OK) {
             var latitude = results[0].geometry.location.lat();
@@ -39,7 +39,7 @@ function initAutocomplete() {
         }
 
         var map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: latitude, lng: longitude},
+            center: { lat: latitude, lng: longitude },
             zoom: 13,
             mapTypeId: 'roadmap'
         });

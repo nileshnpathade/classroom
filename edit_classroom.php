@@ -44,7 +44,7 @@ $PAGE->navbar->add('Update Classroom');
 
 require_login();
 
-if ($userdata = $DB->get_record('classroom', array('id' => $cid))) {
+if ($userdata = $DB->get_record('format_classroom', array('id' => $cid))) {
     $cid = $userdata->id;
     $classroom = $userdata->classroom;
     $details = $userdata->details;
@@ -79,7 +79,7 @@ if ($mform->is_cancelled()) {
     $studentrecord->phoneno  = (isset($fromform->phoneno)) ? $fromform->phoneno : '';
     $studentrecord->equipment  = (isset($fromform->equipment)) ? $fromform->equipment : '';
 
-    $updateid = $DB->update_record('classroom', $studentrecord);
+    $updateid = $DB->update_record('format_classroom', $studentrecord);
     $redirecturl = $CFG->wwwroot.'/course/format/classroom/manage_classroom.php?location_id='.$locationid;
     redirect($redirecturl, 'Classroom update successfully', null, \core\output\notification::NOTIFY_SUCCESS);
 }

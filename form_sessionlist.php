@@ -39,9 +39,9 @@ href = '.$CFG->wwwroot.'/course/format/classroom/session.php?courseid='.$COURSE-
 title="'.get_string('addsession', 'format_classroom').'"> '. get_string('addsession', 'format_classroom') .' </a><br/><br/><br/>';
 echo "<style> td.cell.c5.lastcol{ padding-left:5px; } </style>";
 $start = $page * $perpage;
-$results1 = $DB->get_records_sql("SELECT * FROM {classroom_session}
+$results1 = $DB->get_records_sql("SELECT * FROM {format_classroom_session}
 WHERE isdeleted != 0 and courseid = ?", array($COURSE->id));
-$results = $DB->get_records_sql("SELECT * FROM {classroom_session}
+$results = $DB->get_records_sql("SELECT * FROM {format_classroom_session}
 	WHERE isdeleted != 0 and courseid = ? LIMIT $start,$perpage" , array($COURSE->id));
 $table = new html_table();
 $table->id = 'myTable';
@@ -68,8 +68,8 @@ foreach ($results as $re) {
     $location = $re->location;
     $classroom = $re->classroom;
     $maxenrol = $re->maxenrol;
-    $getlocation = $DB->get_record('classroom_location', array('id' => $location));
-    $getclassroom = $DB->get_record('classroom', array('id' => $classroom));
+    $getlocation = $DB->get_record('format_classroom_location', array('id' => $location));
+    $getclassroom = $DB->get_record('format_classroom', array('id' => $classroom));
     $linkurl2 = 'course/format/classroom/delete_sess.php?cid='.$cid.'&courseid='.$COURSE->id;
     $linkurl1 = 'course/format/classroom/session_edit.php?cid='.$cid.'&courseid='.$COURSE->id;
     $iconedit = '<i class="icon fa fa-cog fa-fw"></i>';

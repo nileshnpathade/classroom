@@ -37,9 +37,9 @@ $out .= html_writer::empty_tag('input', array('type' => 'text',
 echo $out."<br/><br/>";
 echo "<style> td.cell.c2.lastcol{ padding-left:5px; } </style>";
 $start = $page * $perpage;
-$results1 = $DB->get_records_sql("SELECT * FROM {classroom_session} WHERE isdeleted != 0
+$results1 = $DB->get_records_sql("SELECT * FROM {format_classroom_session} WHERE isdeleted != 0
     AND courseid = $COURSE->id ", array());
-$results = $DB->get_records_sql("SELECT * FROM {classroom_session} WHERE isdeleted != 0
+$results = $DB->get_records_sql("SELECT * FROM {format_classroom_session} WHERE isdeleted != 0
     AND courseid = $COURSE->id LIMIT $start,$perpage", array());
 
 $table = new html_table();
@@ -54,7 +54,7 @@ foreach ($results as $re) {
 
     $getuserdetails = $DB->get_records_sql('SELECT ca.id AS caid, u.username, u.id
         From {user} u
-        INNER JOIN {classroom_assignuser} ca
+        INNER JOIN {format_classroom_assignuser} ca
         ON u.id = ca.userid
         WHERE ca.session_id = ?', array($cid));
 

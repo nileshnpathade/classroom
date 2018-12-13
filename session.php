@@ -70,7 +70,7 @@ if ($mform->is_cancelled()) {
     ? $fromform->last_subscription_date : time();
     $classroomsession->other_details = (isset($fromform->other_details)) ? $fromform->other_details : '';
     $classroomsession->create_by = (isset($USER->id)) ? $USER->id : '';
-    $insertedid = $DB->insert_record('classroom_session', $classroomsession);
+    $insertedid = $DB->insert_record('format_classroom_session', $classroomsession);
 
     if ($insertedid > 0) {
         $redirecturl = 'course/view.php?id='.$fromform->courseid.'&editmenumode=true&menuaction=sessionlist&token=1';

@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Session modify/update page.
  *
  * @since 3.4.2
  * @package format_classroom
@@ -46,7 +47,7 @@ class session_edit_form extends moodleform {
         $courseid = $this->_customdata['courseid'];
         $sessionid = $this->_customdata['session_id'];
 
-        $checkexits = $DB->get_record('classroom_session', array('id' => $sessionid));
+        $checkexits = $DB->get_record('format_classroom_session', array('id' => $sessionid));
         $mform->addElement('header', 'addsession', get_string('addsession', 'format_classroom'));
 
         $mform->addElement('hidden', 'courseid', $courseid);
@@ -82,7 +83,7 @@ class session_edit_form extends moodleform {
         $mform->addElement('date_time_selector', 'session_date_end',
             get_string('sessiondatetime_end', 'format_classroom'), $option);
         $mform->addHelpButton('session_date_end', 'sessiondatetime_end', 'format_classroom');
-        $classrooms = $DB->get_records_sql('select id, location from {classroom_location} where isdeleted != ?', array(0));
+        $classrooms = $DB->get_records_sql('select id, location from {format_classroom_location} where isdeleted != ?', array(0));
         $key = array(null => 'Select Location');
         foreach ($classrooms as $classr) {
             $key[$classr->id] = $classr->location;
@@ -162,6 +163,8 @@ class session_edit_form extends moodleform {
      * Custom validation should be added here.
      *
      * @return void
+     * @param $data submited data.
+     * @param $files files input submitted.
      */
     public function validation($data, $files) {
         global $CFG, $DB;
@@ -186,7 +189,7 @@ class session_edit_form extends moodleform {
         $sessionname = trim($data['session']);
         $sessionid = $data['session_id'];
         $location = $data['location'];
-        $sqlsession = 'SELECT * FROM {classroom_session} WHERE id != ? AND session = ? AND courseid = ?';
+        $sqlsession = 'SELECT * FROM {format_classroom_session} WHERE id != ? AND session = ? AND courseid = ?';
         $resultsession = $DB->get_records_sql($sqlsession, array($sessionid, $sessionname, $data['courseid']));
         if (!empty($resultsession)) {
             $errors['session'] = get_string('duplicatesessionname', 'format_classroom');
@@ -227,7 +230,7 @@ class session_edit_form extends moodleform {
             $errors['session_date'] = get_string('invalidsessiondatecurrent', 'format_classroom');
         }
 
-        $sqlsessionother = "SELECT * FROM {classroom_session}
+        $sqlsessionother = "SELECT * FROM {format_classroom_session}
         WHERE ((session_date BETWEEN ".$data['session_date']." AND ".$data['session_date_end'].")
         OR (session_date_end BETWEEN ".$data['session_date']." AND ".$data['session_date_end'].")
         OR (session_date <= ".$data['session_date']." AND session_date_end >= ".$data['session_date_end']."))
@@ -275,7 +278,7 @@ class session_edit_form extends moodleform {
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
 
-        $result = $DB->get_records_sql('select * from {classroom_session}
+        $result = $DB->get_records_sql('select * from {format_classroom_session}
             where isdeleted !=0 and location=?
             and classroom=? and id !=?',
             array($data['location'], $_POST['classroom'], $data['session_id']));
@@ -292,7 +295,7 @@ class session_edit_form extends moodleform {
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         } else {
             // Validation for maxenrol.
-            $getmaxenrol = $DB->get_record('classroom', array('id' => $_POST['classroom']));
+            $getmaxenrol = $DB->get_record('format_classroom', array('id' => $_POST['classroom']));
             if ($maxenrol > $getmaxenrol->seats) {
                 $errors['maxenrol'] = get_string('maxenrolmorethanseats', 'format_classroom');
                 $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');

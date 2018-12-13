@@ -34,7 +34,6 @@ require_once($CFG->libdir.'/formslib.php');
  * @copyright 2018 eNyota Learning Pvt Ltd.
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class config_assignuser_form extends moodleform {
     /**
      * Assign users form definition.
@@ -64,7 +63,7 @@ class config_assignuser_form extends moodleform {
             AND c.id = '$courseid'
             AND u.id != 1 AND u.id != 2
             AND roleid = 5
-            AND  u.id  IN (SELECT ca.userid from {classroom_assignuser} as ca
+            AND  u.id  IN (SELECT ca.userid from {format_classroom_assignuser} as ca
             where ca.session_id = $seesionid)";
 
         $getassinguser = $DB->get_records_sql($sql, array());
@@ -86,7 +85,7 @@ class config_assignuser_form extends moodleform {
             AND c.id = '$courseid'
             AND u.id != 1 AND u.id != 2
             AND roleid = 5
-            AND  u.id NOT IN (SELECT ca.userid from {classroom_assignuser} as ca
+            AND  u.id NOT IN (SELECT ca.userid from {format_classroom_assignuser} as ca
             where ca.session_id = $seesionid)";
 
         $getassinguser = $DB->get_records_sql($sql, array());

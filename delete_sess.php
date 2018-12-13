@@ -27,7 +27,7 @@ $id = required_param('cid', PARAM_INT); // Location ID.
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Location name hash to confirm.
 $courseid = required_param('courseid', PARAM_INT);
 global $OUTPUT, $PAGE, $DB, $COURSE;
-$getsession = $DB->get_record('classroom_session', array('id' => $id));
+$getsession = $DB->get_record('format_classroom_session', array('id' => $id));
 require_login();
 
 $PAGE->set_url('/course/format/classroom/delete_sess.php', array('cid' => $id, 'courseid' => $courseid));
@@ -51,7 +51,7 @@ if ($delete === md5($getsession->session)) {
     $updatedclassroomlocation = new stdClass();
     $updatedclassroomlocation->id = $id;
     $updatedclassroomlocation->isdeleted = 0;
-    $success = $DB->update_record('classroom_session', $updatedclassroomlocation);
+    $success = $DB->update_record('format_classroom_session', $updatedclassroomlocation);
     if ($success) {
         redirect($categoryurl, 'Session deleted successfully', null, \core\output\notification::NOTIFY_SUCCESS);
     }
