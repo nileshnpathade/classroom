@@ -42,7 +42,6 @@ class addclassroom_form extends moodleform {
      * @return void
      */
     public function definition() {
-        global $CFG, $DB;
         $mform = $this->_form;
         $locationid = $this->_customdata['location_id'];
         $mform->addElement('hidden', 'cid');
@@ -90,7 +89,7 @@ class addclassroom_form extends moodleform {
      * @return void
      */
     public function validation($data, $files) {
-        global $CFG, $DB;
+        global $DB;
         $err = array();
         // Seats should be greater than zero.
         if ($data['seats'] <= 0) {
@@ -105,7 +104,7 @@ class addclassroom_form extends moodleform {
         // Check classroom is duplicate or not.
         $classroom = $data['classroom'];
         $locationid = $data['location_id'];
-        $getclassroom = $DB->get_record('format_classroom', array('classroom' => $classroom,
+        $getclassroom = $DB->get_record('classroom', array('classroom' => $classroom,
             'isdeleted' => 1, 'location_id' => $locationid));
         if ( !empty($getclassroom) ) {
             $err['classroom'] = get_string('duplicateclassroom', 'format_classroom');

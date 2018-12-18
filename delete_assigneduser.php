@@ -29,10 +29,10 @@ $courseid = required_param('courseid', PARAM_INT);
 $sessionid = required_param('session_id', PARAM_INT);
 if ($token == 0) {
     $id = required_param('id', PARAM_INT);
-    $getassignusers = $DB->get_record('format_classroom_assignuser', array('id' => $id));
+    $getassignusers = $DB->get_record('classroom_assignuser', array('id' => $id));
 }
 global $OUTPUT, $PAGE, $DB, $COURSE;
-$getsession = $DB->get_record('format_classroom_session', array('id' => $sessionid));
+$getsession = $DB->get_record('classroom_session', array('id' => $sessionid));
 require_login();
 $PAGE->set_url('/course/format/classroom/delete_assigneduser.php',
     array('session_id' => $sessionid, 'courseid' => $courseid, 'token' => 1));
@@ -52,19 +52,19 @@ $categoryurl = new moodle_url('/course/view.php?id='.$courseid.'&editmenumode=tr
     array());
 if ($delete === md5($getsession->session)) {
     if ($token == 0) {
-        $success = $DB->delete_records('format_classroom_assignuser', array('id' => $id));
+        $success = $DB->delete_records('classroom_assignuser', array('id' => $id));
     } else {
-        $getallassignusers = $DB->get_records('format_classroom_assignuser', array('session_id' => $sessionid));
+        $getallassignusers = $DB->get_records('classroom_assignuser', array('session_id' => $sessionid));
         // Unassign Mail.
         foreach ($getallassignusers as $key => $userids) {
             $userto = $DB->get_record('user', array('id' => $userids->userid));
-            $getsessiondetails  = $DB->get_record('format_classroom_session', array('id' => $sessionid));
+            $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $sessionid));
             $messagehtml = "Dear $userto->firstname,<br/><br/>
                 You have unassign for session $getsessiondetails->session<br/><br/>
                 Regards,<br/>
                 $SITE->fullname.
             ";
-            $success = $DB->delete_records('format_classroom_assignuser', array('session_id' => $sessionid));
+            $success = $DB->delete_records('classroom_assignuser', array('session_id' => $sessionid));
             email_to_user($userto, $USER, 'Unassign the session', 'Unassign the session for you', $messagehtml);
         }
     }

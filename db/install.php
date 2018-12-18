@@ -29,5 +29,4 @@ defined('MOODLE_INTERNAL') || die();
  * @return void
  */
 function xmldb_format_classroom_install() {
-    global $CFG, $DB;
 }

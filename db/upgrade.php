@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool result
  */
 function xmldb_format_classroom_upgrade($oldversion) {
-    global $CFG, $DB;
+    global $CFG;
 
     require_once($CFG->dirroot . '/course/format/classroom/db/upgradelib.php');
 

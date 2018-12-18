@@ -42,14 +42,10 @@ class location_edit_form extends moodleform {
      * @return void
      */
     public function definition() {
-        global $CFG, $DB, $PAGE;
+        global $CFG, $PAGE;
 
         $mform = $this->_form;
         $cid = $this->_customdata['id'];
-        $location = $this->_customdata['location'];
-        $address = $this->_customdata['address'];
-        $phoneno = $this->_customdata['phoneno'];
-        $emailid = $this->_customdata['emailid'];
         $script = '<script
         src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M"></script>';
 
@@ -89,7 +85,7 @@ class location_edit_form extends moodleform {
      * @return void
      */
     public function validation($data, $files) {
-        global $CFG, $DB;
+        global $DB;
         $err = array();
         if ($data['emailid']) {
             if (!validate_email($data['emailid'])) {
@@ -99,7 +95,7 @@ class location_edit_form extends moodleform {
         if (empty(trim($data['location']))) {
             $err['location'] = get_string('required');
         }
-        $results = $DB->get_records_sql("SELECT * FROM {format_classroom_location} WHERE isdeleted != 0 AND location=? AND id != ?",
+        $results = $DB->get_records_sql("SELECT * FROM {classroom_location} WHERE isdeleted != 0 AND location=? AND id != ?",
             array($data['location'], $data['cid']));
         if (!empty($results)) {
             $err['location'] = get_string('duplicatelocation', 'format_classroom');

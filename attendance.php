@@ -36,16 +36,19 @@ $PAGE->set_title(get_string('update_location', 'format_classroom'));
 $PAGE->set_heading(get_string('update_location', 'format_classroom'));
 $PAGE->set_pagelayout('course');
 
-if (isset($_POST['submit'])) {
-    $sessid = isset($_POST['session_name']) ? $_POST['session_name'] : 0;
-    $checksession = $DB->get_records('format_classroom_attendance', array('sessionid' => $sessid));
+$submit = optional_param('submit', '', PARAM_RAW);
+if (!empty($submit)) {
+    $sessid = optional_param('session_name', 0, PARAM_RAW);
+    $checksession = $DB->get_records('classroom_attendance', array('sessionid' => $sessid));
     if (empty($checksession)) {
-        if (!empty($_POST['session_name'])) {
-            $users = isset($_POST['userid']) ? $_POST['userid'] : '0';
+        if (!empty($sessid)) {
+            $users = optional_param_array('userid', 0, PARAM_RAW);
+            $status = optional_param_array('status', 0, PARAM_RAW);
+            $comment = optional_param_array('comment', 0, PARAM_RAW);
             for ($v = 1; $v <= count($users); $v++) {
-                $userid = isset($_POST['userid'][$v]) ? $_POST['userid'][$v] : '0';
-                $status = isset($_POST['status'][$v]) ? $_POST['status'][$v] : 'A';
-                $comment = isset($_POST['comment'][$v]) ? $_POST['comment'][$v] : '';
+                $userid = isset($users[$v]) ? $users[$v] : '0';
+                $status = isset($status[$v]) ? $status[$v] : 'A';
+                $comment = isset($comment[$v]) ? $comment[$v] : '';
                 $attendance = 'A';
                 if ($status == 'P') {
                     $attendance = 'P';
@@ -54,15 +57,15 @@ if (isset($_POST['submit'])) {
                 $classroomattendance = new stdClass();
                 $classroomattendance->userid = $userid;
                 $classroomattendance->attendance = $attendance;
-                $classroomattendance->sessionid = $_POST['session_name'];
+                $classroomattendance->sessionid = $sessid;
                 $classroomattendance->courseid = $courseid;
                 $classroomattendance->comment = $comment;
-                $insertedid = $DB->insert_record('format_classroom_attendance', $classroomattendance);
+                $insertedid = $DB->insert_record('classroom_attendance', $classroomattendance);
 
                 // Present Mail.
                 if ($status == 'P') {
                     $userto = $DB->get_record('user', array('id' => $userid));
-                    $getsessiondetails  = $DB->get_record('format_classroom_session', array('id' => $_POST['session_name']));
+                    $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $sessid));
                     $messagehtml = "Dear $userto->firstname,<br/><br/>
                         Thank you for attending session $getsessiondetails->session .<br/>
                         Here is comment for you given by Admin: $comment<br/><br/>
@@ -73,7 +76,7 @@ if (isset($_POST['submit'])) {
                         'Thank you for attending session', $messagehtml);
                 } else {
                     $userto = $DB->get_record('user', array('id' => $userid));
-                    $getsessiondetails  = $DB->get_record('format_classroom_session', array('id' => $_POST['session_name']));
+                    $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $sessid));
                     $messagehtml = "Dear $userto->firstname,<br/><br/>
                         You have miss session $getsessiondetails->session .<br/>
                         If you have interested again than contact to admin.<br/>
@@ -96,15 +99,17 @@ if (isset($_POST['submit'])) {
             'Select Session', null, \core\output\notification::NOTIFY_ERROR);
         }
     } else {
-        if (!empty($_POST['session_name'])) {
-            $users = isset($_POST['userid']) ? $_POST['userid'] : '0';
+        if (!empty($sessid)) {
+            $users = optional_param_array('userid', 0, PARAM_RAW);
+            $status = optional_param_array('status', 0, PARAM_RAW);
+            $comment = optional_param_array('comment', 0, PARAM_RAW);
             $v = 1;
-            foreach ($_POST['userid'] as $key => $value) {
-                $getattendanceid = $DB->get_record('format_classroom_attendance',
+            foreach ($users as $key => $value) {
+                $getattendanceid = $DB->get_record('classroom_attendance',
                 array('sessionid' => $sessid, 'userid' => $value));
-                $userid = isset($_POST['userid'][$v]) ? $_POST['userid'][$v] : '0';
-                $status = isset($_POST['status'][$v]) ? $_POST['status'][$v] : 'A';
-                $comment = isset($_POST['comment'][$v]) ? $_POST['comment'][$v] : '';
+                $userid = isset($users[$v]) ? $users[$v] : '0';
+                $status = isset($status[$v]) ? $status[$v] : 'A';
+                $comment = isset($comment[$v]) ? $comment[$v] : '';
                 $attendance = 'A';
                 if ($status == 'P') {
                     $attendance = 'P';
@@ -114,23 +119,23 @@ if (isset($_POST['submit'])) {
                     $classroomattendanceupdate->id = $getattendanceid->id;
                     $classroomattendanceupdate->userid = $userid;
                     $classroomattendanceupdate->attendance = $attendance;
-                    $classroomattendanceupdate->sessionid = $_POST['session_name'];
+                    $classroomattendanceupdate->sessionid = $sessid;
                     $classroomattendanceupdate->courseid = $courseid;
                     $classroomattendanceupdate->comment = $comment;
-                    $updateid = $DB->update_record('format_classroom_attendance', $classroomattendanceupdate);
+                    $updateid = $DB->update_record('classroom_attendance', $classroomattendanceupdate);
                 } else {
                     $classroomattendance2 = new stdClass();
                     $classroomattendance2->userid = $userid;
                     $classroomattendance2->attendance = $attendance;
-                    $classroomattendance2->sessionid = $_POST['session_name'];
+                    $classroomattendance2->sessionid = $sessid;
                     $classroomattendance2->courseid = $courseid;
                     $classroomattendance2->comment = $comment;
-                    $insertedid = $DB->insert_record('format_classroom_attendance', $classroomattendance2);
+                    $insertedid = $DB->insert_record('classroom_attendance', $classroomattendance2);
 
                     // Present Mail.
                     if ($status == 'P') {
                         $userto = $DB->get_record('user', array('id' => $userid));
-                        $getsessiondetails  = $DB->get_record('format_classroom_session', array('id' => $_POST['session_name']));
+                        $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $sessid));
                         $messagehtml = "Dear $userto->firstname,<br/><br/>
                             Thank you for attending session $getsessiondetails->session .<br/>
                             Here is comment for you given by Admin: $comment<br/><br/>
@@ -141,7 +146,7 @@ if (isset($_POST['submit'])) {
                             'Thank you for attending session', $messagehtml);
                     } else {
                         $userto = $DB->get_record('user', array('id' => $userid));
-                        $getsessiondetails  = $DB->get_record('format_classroom_session', array('id' => $_POST['session_name']));
+                        $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $sessid));
                         $messagehtml = "Dear $userto->firstname,<br/><br/>
                             You have miss session $getsessiondetails->session .<br/>
                             If you have interested again than contact to admin.<br/>

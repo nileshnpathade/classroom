@@ -47,7 +47,7 @@ $PAGE->requires->css(new moodle_url($CFG->wwwroot . '/course/format/classroom/vi
 echo $OUTPUT->header();
 
 // Get all records for locaiton.
-$getrecords = $DB->get_record('format_classroom_location', array('id' => $cid));
+$getrecords = $DB->get_record('classroom_location', array('id' => $cid));
 
 $out = '';
 $out .= html_writer::start_tag('div', array('class' => 'box generalbox modal modal-dialog modal-in-page show p-y-1'));

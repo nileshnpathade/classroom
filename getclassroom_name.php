@@ -26,7 +26,7 @@ require_once('../../../config.php');
 $locationid = optional_param('locationid', 0, PARAM_INT);
 global $DB;
 require_login();
-$getclassroom = $DB->get_records_sql('select id, classroom from {format_classroom}
+$getclassroom = $DB->get_records_sql('select id, classroom from {classroom}
     where location_id = ? AND isdeleted != ?', array($locationid, 0));
 $arr = array(0 => 'Select Classroom');
 foreach ($getclassroom as $key => $value) {

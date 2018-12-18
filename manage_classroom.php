@@ -63,12 +63,17 @@ echo '</a><br/><br/><br/>';
 echo "<style> td.cell.c4.lastcol{ padding-left:0px; } </style>";
 
 $start = $page * $perpage;
-$sqlclass = "SELECT c.*, cl.location FROM {format_classroom} c INNER JOIN {format_classroom_location} cl ON
-c.location_id = cl.id WHERE c.isdeleted != 0 and c.location_id = ?";
+$sqlclass = "SELECT c.*, cl.location FROM {classroom} c
+INNER JOIN {classroom_location} cl ON
+c.location_id = cl.id
+WHERE c.isdeleted != 0 and c.location_id = ?";
 
 $results1 = $DB->get_records_sql($sqlclass, array($locationid));
-$sql = "SELECT c.*, cl.location FROM {format_classroom} c INNER JOIN {format_classroom_location} cl ON
-c.location_id = cl.id WHERE c.isdeleted != 0 and c.location_id = ? LIMIT $start, $perpage";
+$sql = "SELECT c.*, cl.location FROM {classroom} c
+INNER JOIN {classroom_location} cl ON
+c.location_id = cl.id
+WHERE c.isdeleted != 0 and c.location_id = ?
+LIMIT $start, $perpage";
 
 $results = $DB->get_records_sql($sql, array($locationid));
 

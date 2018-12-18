@@ -27,7 +27,7 @@ $id = required_param('cid', PARAM_INT); // Location ID.
 $delete = optional_param('delete', '', PARAM_ALPHANUM); // Location name hash to confirm.
 
 global $OUTPUT, $PAGE, $DB, $COURSE;
-$getlocation = $DB->get_record('format_classroom_location', array('id' => $id));
+$getlocation = $DB->get_record('classroom_location', array('id' => $id));
 require_login();
 $PAGE->set_url('/course/format/classroom/delete_loc.php?cid='.$id, array());
 $context = context_system::instance();
@@ -46,7 +46,7 @@ if ($delete === md5($getlocation->location)) {
     $updatedclassroomlocation = new stdClass();
     $updatedclassroomlocation->id = $id;
     $updatedclassroomlocation->isdeleted = 0;
-    $success = $DB->update_record('format_classroom_location', $updatedclassroomlocation);
+    $success = $DB->update_record('classroom_location', $updatedclassroomlocation);
     if ($success) {
         redirect($categoryurl, 'Location deleted successfully', null, \core\output\notification::NOTIFY_SUCCESS);
     }

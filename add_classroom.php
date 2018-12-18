@@ -62,7 +62,7 @@ if ($mform->is_cancelled()) {
     $classroom->seats = (isset($fromform->seats)) ? $fromform->seats : '';
     $classroom->equipment = (isset($fromform->equipment)) ? $fromform->equipment : '';
     $classroom->isdeleted = 1;
-    $insertedid = $DB->insert_record('format_classroom', $classroom);
+    $insertedid = $DB->insert_record('classroom', $classroom);
     if ($insertedid > 0) {
         $redirecturl = $CFG->wwwroot.'/course/format/classroom/manage_classroom.php?location_id='.$locationid;
         redirect($redirecturl, 'Classroom added successfully', null, \core\output\notification::NOTIFY_SUCCESS);

@@ -35,13 +35,8 @@ class classroom_edit_form extends moodleform {
      * @return void
      */
     public function definition() {
-        global $CFG, $DB;
         $mform = $this->_form;
         $cid = $this->_customdata['id'];
-        $classroom = $this->_customdata['classroom'];
-        $details = $this->_customdata['details'];
-        $seats = $this->_customdata['seats'];
-        $equipment = $this->_customdata['equipment'];
         $locationid = $this->_customdata['location_id'];
         $mform->addElement('hidden', 'cid', $cid);
         $mform->setType('cid', PARAM_INT);
@@ -89,7 +84,7 @@ class classroom_edit_form extends moodleform {
      * @return void
      */
     public function validation($data, $files) {
-        global $CFG, $DB;
+        global $DB;
         $err = array();
         if ($data['seats'] <= 0) {
             $err['seats'] = get_string('zeroseats', 'format_classroom');
@@ -102,7 +97,7 @@ class classroom_edit_form extends moodleform {
         $classroom = $data['classroom'];
         $locationid = $data['location_id'];
         $cid = $data['cid'];
-        $sql = 'SELECT * FROM {format_classroom} WHERE classroom = ? AND id != ? AND isdeleted = 1 AND location_id = ?';
+        $sql = 'SELECT * FROM {classroom} WHERE classroom = ? AND id != ? AND isdeleted = 1 AND location_id = ?';
         $getclassroom = $DB->get_records_sql($sql, array($classroom, $cid, $locationid));
         if (!empty($getclassroom)) {
             $err['classroom'] = get_string('duplicateclassroom', 'format_classroom');
