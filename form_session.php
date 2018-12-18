@@ -65,7 +65,6 @@ class config_session_form extends moodleform {
         $mform->addElement('date_time_selector', 'last_subscription_date_from',
             get_string('lastsubscriptiondatefrom', 'format_classroom') , $option);
         $mform->addHelpButton('last_subscription_date_from', 'lastsubscriptiondatefrom', 'format_classroom');
-
         $mform->addElement('date_time_selector', 'last_subscription_date',
             get_string('lastsubscriptiondateto', 'format_classroom') , $option);
         $mform->addHelpButton('last_subscription_date', 'lastsubscriptiondateto', 'format_classroom');
@@ -182,30 +181,26 @@ class config_session_form extends moodleform {
 
         // Duplicate session name.
         $sessionname = trim($data['session']);
-        $resultsession = $DB->get_records('classroom_session', array('session' => $sessionname, 'courseid' => $data['courseid']));
-        if (!empty($resultsession)) {
+        $resultsessiondet = $DB->get_records('classroom_session', array('session' => $sessionname, 'courseid' => $data['courseid']));
+        if (!empty($resultsessiondet)) {
             $errors['session'] = get_string('duplicatesessionname', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
         // Session start date must be greater than current time.
         if ($data['session_date'] < time()) {
             $errors['session_date'] = get_string('invalidsessiondatecurrent', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
         // Session end date must be greater than current time.
         if ($data['session_date_end'] < time()) {
             $errors['session_date_end'] = get_string('invalidsessiondateenddate', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
         // Session start date must be bigger than end date.
         if ($startday >= $endday) {
             $errors['session_date_end'] .= get_string('invalidsessiondateenddaterange', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
         $er = explode('<br/>', $errors['session_date_end']);
         if (count($er) >= 2) {
             $errors['session_date_end'] = get_string('invalidsessiondateenddate', 'format_classroom');

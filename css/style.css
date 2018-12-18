@@ -19,7 +19,7 @@
     background-color: #1177d1;
     color: #fff;
 }
-.card-header: title {
+.card-header:title {
     content: '';
     display: none;
 }

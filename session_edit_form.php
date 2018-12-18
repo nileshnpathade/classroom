@@ -52,40 +52,37 @@ class session_edit_form extends moodleform {
 
         $mform->addElement('hidden', 'courseid', $courseid);
         $mform->setType('courseid', PARAM_INT);
-
         $mform->addElement('hidden', 'session_id', $sessionid);
         $mform->setType('session_id', PARAM_INT);
-
         $mform->addElement('text', 'session', get_string('session', 'format_classroom'));
         $mform->setType('session', PARAM_RAW);
         $mform->addHelpButton('session', 'session', 'format_classroom');
         $mform->addRule('session', get_string('required'), 'required', null, 'client');
-
-        $option = array(
+        $optionyear = array(
             'startyear' => date('Y'),
             'stopyear'  => 2090,
             'timezone'  => 99,
             'step'      => 5
         );
-
+        // Date time selector for subscription dates.
         $mform->addElement('date_time_selector', 'last_subscription_date_from',
-            get_string('lastsubscriptiondatefrom', 'format_classroom') , $option);
+            get_string('lastsubscriptiondatefrom', 'format_classroom') , $optionyear);
         $mform->addHelpButton('last_subscription_date_from', 'lastsubscriptiondatefrom', 'format_classroom');
 
         $mform->addElement('date_time_selector', 'last_subscription_date',
-            get_string('lastsubscriptiondateto', 'format_classroom'), $option);
+            get_string('lastsubscriptiondateto', 'format_classroom'), $optionyear);
         $mform->addHelpButton('last_subscription_date', 'lastsubscriptiondateto', 'format_classroom');
 
         // Start Date Time.
-        $mform->addElement('date_time_selector', 'session_date', get_string('sessiondatetime', 'format_classroom') , $option);
+        $mform->addElement('date_time_selector', 'session_date', get_string('sessiondatetime', 'format_classroom') , $optionyear);
         $mform->addHelpButton('session_date', 'sessiondatetime', 'format_classroom');
         // End Date Time.
         $mform->addElement('date_time_selector', 'session_date_end',
-            get_string('sessiondatetime_end', 'format_classroom'), $option);
+            get_string('sessiondatetime_end', 'format_classroom'), $optionyear);
         $mform->addHelpButton('session_date_end', 'sessiondatetime_end', 'format_classroom');
-        $classrooms = $DB->get_records_sql('select id, location from {classroom_location} where isdeleted != ?', array(0));
+        $classroomsdetails = $DB->get_records_sql('select id, location from {classroom_location} where isdeleted != ?', array(0));
         $key = array(null => 'Select Location');
-        foreach ($classrooms as $classr) {
+        foreach ($classroomsdetails as $classr) {
             $key[$classr->id] = $classr->location;
         }
 
@@ -104,21 +101,19 @@ class session_edit_form extends moodleform {
         $roles = $DB->get_records_sql('select * from {role}
             where (shortname = ? OR shortname = ?)', array('editingteacher', 'teacher'));
         $contextid = context_course::instance($courseid);
-        $arrayteachername = array();
+        $arrayteachernames = array();
         $arrayteacherid = array();
-
         foreach ($roles as $key => $role) {
             $teachers = get_role_users($role->id, $contextid);
-            foreach ($teachers as $key => $teacher) {
-                $teachername = $teacher->firstname.' '.$teacher->lastname;
-                $teacherid = $teacher->id;
-                array_push($arrayteacherid, $teacherid);
-                array_push($arrayteachername, $teachername);
+            foreach ($teachers as $key => $teacherdet) {
+                $teacherfullname = $teacherdet->firstname.' '.$teacherdet->lastname;
+                $teachersid = $teacherdet->id;
+                array_push($arrayteacherid, $teachersid);
+                array_push($arrayteachernames, $teacherfullname);
             }
         }
-
         $teacherlistselect = array(null => 'Select Teacher');
-        $teacherlists = array_combine($arrayteacherid, $arrayteachername);
+        $teacherlists = array_combine($arrayteacherid, $arrayteachernames);
         $listofteacher = $teacherlistselect + $teacherlists;
 
         $mform->addElement('selectwithlink', 'teacher', get_string('selectteacher', 'format_classroom') ,
