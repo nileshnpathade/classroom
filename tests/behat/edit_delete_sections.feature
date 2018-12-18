@@ -1,4 +1,4 @@
-@format @format_Classrooms
+@format @format_Classroom
 Feature: Sections can be edited and deleted in Classrooms format
   In order to rearrange my course contents
   As a teacher
