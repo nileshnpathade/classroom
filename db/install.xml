@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="course/format/classroom/db" VERSION="20180419" COMMENT="XMLDB file for Moodle course/format/classroom"
+<XMLDB PATH="course/format/classroom/db" VERSION="20181212" COMMENT="XMLDB file for Moodle course/format/classroom"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd">
+    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
+>
   <TABLES>
-    <TABLE NAME="classroom" COMMENT="classroom table retrofitted from MySQL">
+    <TABLE NAME="format_classroom" COMMENT="Default comment for format_classroom, please edit me">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="classroom" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="location_id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="seats" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="equipment" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="details" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="emailid" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="phoneno" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="classroom" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false" COMMENT="Name of Classroom"/>
+        <FIELD NAME="location_id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false" COMMENT="Location ID of Particular Classroom"/>
+        <FIELD NAME="seats" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false" COMMENT="Number of available Seats in classroom"/>
+        <FIELD NAME="equipment" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Equipment of classroom"/>
+        <FIELD NAME="details" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Details of classroom"/>
+        <FIELD NAME="emailid" TYPE="char" LENGTH="256" NOTNULL="false" SEQUENCE="false" COMMENT="Email of classroom"/>
+        <FIELD NAME="phoneno" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false" COMMENT="Phone no for classroom"/>
+        <FIELD NAME="isdeleted" TYPE="int" LENGTH="9" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Status of deleted classroom"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="format_classroom_location" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="location" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="address" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false" COMMENT="Address of location"/>
+        <FIELD NAME="phoneno" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false" COMMENT="Phone  no of location"/>
+        <FIELD NAME="emailid" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false" COMMENT="email Id"/>
+        <FIELD NAME="classroom_name" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false" COMMENT="Classroom name"/>
         <FIELD NAME="isdeleted" TYPE="int" LENGTH="9" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="classroom_location" COMMENT="classroom_location table retrofitted from MySQL">
+    <TABLE NAME="format_classroom_session" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="18" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="location" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="address" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="phoneno" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="emailid" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="classroom_name" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="isdeleted" TYPE="int" LENGTH="9" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="classroom_session" COMMENT="classroom_session table retrofitted from MySQL">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="session" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="session_date" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
@@ -46,33 +47,33 @@
         <FIELD NAME="maxenrol" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="last_subscription_date" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="last_subscription_date_from" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="other_details" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="other_details" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="isdeleted" TYPE="int" LENGTH="9" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
         <FIELD NAME="create_by" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="classroom_assignuser" COMMENT="classroom_assignuser table retrofitted from MySQL">
+    <TABLE NAME="format_classroom_assignuser" COMMENT="Assign user for classroom session.">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="session_id" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="assign_by" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="classroom_attendance" COMMENT="Default comment for the table, please edit me">
+    <TABLE NAME="format_classroom_attendance" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false" COMMENT="User ID"/>
-        <FIELD NAME="sessionid" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false" COMMENT="User ID"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="11" NOTNULL="false" SEQUENCE="false" COMMENT="User ID"/>
-        <FIELD NAME="attendance" TYPE="char" LENGTH="11" NOTNULL="false" DEFAULT="A" SEQUENCE="false" COMMENT="P = Present  A = Absend"/>
-        <FIELD NAME="comment" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Comment for Students"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="9" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="attendance" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="comment" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
