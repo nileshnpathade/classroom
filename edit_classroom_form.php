@@ -37,10 +37,6 @@ class classroom_edit_form extends moodleform {
     public function definition() {
         $mform = $this->_form;
         $cid = $this->_customdata['id'];
-        $classroom = $this->_customdata['classroom'];
-        $details = $this->_customdata['details'];
-        $seats = $this->_customdata['seats'];
-        $equipment = $this->_customdata['equipment'];
         $locationid = $this->_customdata['location_id'];
         $mform->addElement('hidden', 'cid', $cid);
         $mform->setType('cid', PARAM_INT);
@@ -49,32 +45,40 @@ class classroom_edit_form extends moodleform {
         $mform->setType('location_id', PARAM_INT);
 
         $mform->addElement('header', 'update_classroom', get_string('update_classroom', 'format_classroom'));
+
+        // Classroom name text box.
         $mform->addElement('text', 'classroom', get_string('classroom', 'format_classroom'));
         $mform->setType('classroom', PARAM_RAW);
         $mform->addHelpButton('classroom', 'classroom', 'format_classroom');
         $mform->addRule('classroom', get_string('required'), 'required', null, 'client');
 
+        // Classroom email id to contact to classroom.
         $mform->addElement('text', 'emailid', get_string('emailid', 'format_classroom'));
         $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
         $mform->addHelpButton('emailid', 'emailid', 'format_classroom');
         $mform->setType('emailid', PARAM_RAW);
 
+        // Phone number for contacting to classroom.
         $mform->addElement('text', 'phoneno', get_string('phoneno', 'format_classroom'));
         $mform->addHelpButton('phoneno', 'phoneno', 'format_classroom');
         $mform->addRule('phoneno', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
         $mform->setType('phoneno', PARAM_RAW);
 
+        // Seats is showing capacity of classroom.
         $mform->addElement('text', 'seats', get_string('seats', 'format_classroom'));
         $mform->setType('seats', PARAM_RAW);
         $mform->addHelpButton('seats', 'seats', 'format_classroom');
         $mform->addRule('seats', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
         $mform->addRule('seats', get_string('required'), 'required', null, 'client');
         $mform->addRule('seats', get_string('negativenumber', 'format_classroom'), 'regex', '/^[1-9]\d*$/', 'client');
+        
+        // Classroom other details.
         $mform->addElement('textarea', 'details', get_string("details", "format_classroom"),
             'rows="5" cols="19" maxlength="5000"');
         $mform->addHelpButton('details', 'details', 'format_classroom');
         $mform->setType('details', PARAM_RAW);
 
+        // Classroom with equipment or not.
         $mform->addElement('textarea', 'equipment', get_string("equipment", "format_classroom"),
             'rows="5" cols="19" maxlength="5000"');
         $mform->setType('equipment', PARAM_RAW);

@@ -179,7 +179,6 @@ class format_classroom_renderer extends format_section_renderer_base {
         global $PAGE, $DB, $USER, $COURSE, $CFG;
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
-        $context = context_course::instance($course->id);
         $PAGE->requires->js(
             new moodle_url('https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M'));
         $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/viewmap.js'));
@@ -453,14 +452,14 @@ class format_classroom_renderer extends format_section_renderer_base {
 
                 $seats = $getclassroom->seats;
                 $location = $getlocation->location;
-                $hide1 = '<span id="hide" class="substr"> Hide </span>';
-                $hide2 = '<span id="hide_equp" class="substr"> Hide </span>';
+                $hidestr = '<span id="hide" class="substr"> Hide </span>';
+                $hide2str = '<span id="hide_equp" class="substr"> Hide </span>';
                 $equipment = $getclassroom->equipment;
                 $equipment1 = $getclassroom->equipment;
-                $hideequipment = $getclassroom->equipment.$hide2;
+                $hideequipmentval = $getclassroom->equipment.$hide2str;
                 $details = $getclassroom->details;
                 $details1 = $getclassroom->details;
-                $hideeetails = $getclassroom->details.$hide1;
+                $hideeetails = $getclassroom->details.$hidestr;
                 if (strlen($getclassroom->equipment) > 100) {
                     $equipment = substr($getclassroom->equipment, 0, 50).'...';
                     $equipment1 = substr($getclassroom->equipment, 0, 50).'...<span id="equipment_black_only"
@@ -475,7 +474,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                     $teacheruser = get_complete_user_data('id', $sessiondetails->teacher);
                     $teacher = $teacheruser->firstname.' '.$teacheruser->lastname;
                 }
-
+                // HTML for Table start here.
                 echo "</td>";
                 echo "</tr>";
 
@@ -500,7 +499,9 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "</tr>";
                 echo "</table>";
                 echo "</div></div>";
+                // HTML for Table end here.
 
+                // Popup content for Othere details.
                 $popupcontent = '<div class="modal fade" id="myModal'.$c.'" role="dialog">';
                 $popupcontent .= '<div class="modal-dialog">';
                 $popupcontent .= '<div class="modal-content">';
@@ -516,6 +517,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                 $popupcontent .= '</div> </div> </div> </div>';
                 echo $popupcontent;
 
+                // Popup content for Location.
                 $popuplocat = '<div class="modal fade" id="mylocation'.$c.'" role="dialog">';
                 $popuplocat .= '<div class="modal-dialog">';
                 $popuplocat .= '<div class="modal-content">';
@@ -534,6 +536,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                 $popuplocat .= '</div> </div> </div> </div>';
                 echo $popuplocat;
 
+                // Popup content for Classroom.
                 $popupclass = '<div class="modal fade" id="myclassroom'.$c.'" role="dialog">';
                 $popupclass .= '<div class="modal-dialog">';
                 $popupclass .= '<div class="modal-content">';
@@ -549,7 +552,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                 $popupclass .= '<td> '.$hideeetails.'</td> </tr>';
                 $popupclass .= '<tr id="equipment"> <th>Equipment : </th> <td> '.$equipment1.'</td> </tr>';
                 $popupclass .= '<tr id="equipment1" class="hidden" valign="top"> <th>Equipment : </th>';
-                $popupclass .= '<td> '.$hideequipment.'</td> </tr>';
+                $popupclass .= '<td> '.$hideequipmentval.'</td> </tr>';
                 $popupclass .= '</table>';
                 $popupclass .= '</div> <div class="modal-footer">';
                 $popupclass .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
@@ -566,7 +569,6 @@ class format_classroom_renderer extends format_section_renderer_base {
 
         // Now the list of sections..
         echo $this->start_section_list();
-        $numsections = course_get_format($course)->get_last_section_number();
 
         foreach ($modinfo->get_section_info_all() as $section => $thissection) {
             if ($section == 0) {
@@ -593,7 +595,7 @@ class format_classroom_renderer extends format_section_renderer_base {
      * @param int $displaysection The section number in the course which is being displayed
      */
     public function print_edition_page($course, $sections, $mods, $modnames, $modnamesused, $displaysection) {
-        global $PAGE, $CFG, $DB, $OUTPUT, $USER;
+        global $PAGE, $CFG;
         $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/jquery.min.js'));
         $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/search.js'));
         if (!$PAGE->user_is_editing()) {
@@ -618,9 +620,6 @@ class format_classroom_renderer extends format_section_renderer_base {
         $courselink = new moodle_url($CFG->wwwroot.'/course/view.php',
                         array('id' => $course->id, 'editmenumode' => 'true', 'section' => $displaysection));
         echo "<br/>";
-
-        $coursecancellink = new moodle_url($CFG->wwwroot.'/course/view.php',
-                                array('id' => $course->id, 'section' => $displaysection));
 
         $tabs = array();
 

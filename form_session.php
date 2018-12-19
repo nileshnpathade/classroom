@@ -41,7 +41,7 @@ class config_session_form extends moodleform {
      * @return void
      */
     public function definition() {
-        global $USER, $CFG, $COURSE, $DB, $PAGE;
+        global $CFG, $DB, $PAGE;
         $mform =& $this->_form;
         $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/course/format/classroom/css/style.css'));
         $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/myjavascript.js'));
@@ -86,7 +86,6 @@ class config_session_form extends moodleform {
             $key[$classr->id] = $classr->location;
         }
 
-        $attributes = array();
         $mform->addElement('selectwithlink', 'location', get_string('location',
             'format_classroom'), $key, array('onchange' =>
             'javascript:get_states("'.$CFG->wwwroot.'", this.value,this.id);'),
@@ -149,7 +148,6 @@ class config_session_form extends moodleform {
      * @return void
      */
     public function definition_after_data() {
-        global $DB, $CFG;
         $mform = $this->_form;
         $classroom = $mform->getElementValue('classroom');
         $mform->setDefault('classroom', array('value' => $classroom));
@@ -163,7 +161,7 @@ class config_session_form extends moodleform {
      * @param $files files input submitted.
      */
     public function validation($data, $files) {
-        global $CFG, $DB;
+        global $DB;
         $errors = array();
         $startday = $data['session_date'];
         $endday = $data['session_date_end'];
@@ -276,7 +274,7 @@ class config_session_form extends moodleform {
         $result = $DB->get_records('format_classroom_session', array('isdeleted' => '1',
             'location' => $data['location'], 'classroom' => $classroom));
 
-        foreach ($result as $key => $value) {
+        foreach ($result as $value) {
             if (!((($value->session_date > $startday)
                 AND ($value->session_date > $endday))
                 OR ( ($value->session_date_end < $startday)

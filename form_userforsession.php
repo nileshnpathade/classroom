@@ -98,7 +98,7 @@ class config_assignuser_form extends moodleform {
         get_string('users', 'format_classroom'), $ausers, 'size="15"');
         $objs[1]->setMultiple(true);
 
-        $grp =& $mform->addElement('group', 'usersgrp',
+        $mform->addElement('group', 'usersgrp',
         get_string('users', 'format_classroom'), $objs, ' ', false);
         $this->add_action_buttons(true);
     }

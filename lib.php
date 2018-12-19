@@ -279,7 +279,6 @@ class format_classroom extends format_base {
      * @return array array of references to the added form elements.
      */
     public function create_edit_form_elements(&$mform, $forsection = false) {
-        global $COURSE;
         $elements = parent::create_edit_form_elements($mform, $forsection);
         return $elements;
     }
