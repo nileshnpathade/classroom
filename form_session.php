@@ -168,7 +168,7 @@ class config_session_form extends moodleform {
         $maxenrol = $data['maxenrol'];
         $getcoursedetails = $DB->get_record('course', array('id' => $data['courseid']));
         $classroom = optional_param('classroom', '', PARAM_INT);
-        $seesionstartdate = $data['session_date'];
+        $seesionstartdatetime = $data['session_date'];
         $seesionenddate = $data['session_date_end'];
         $coursestartdate = $getcoursedetails->startdate;
         if ( $getcoursedetails->enddate != 0 ) {
@@ -223,7 +223,7 @@ class config_session_form extends moodleform {
         OR (session_date <= '".$data['session_date']."' AND session_date_end >= '".$data['session_date_end']."')) AND teacher = ?";
         $resultsessionothers = $DB->get_records_sql($sqlsessionother, array($data['teacher']));
         if (!empty($resultsessionothers)) {
-            $errors['teacher'] = 'Teacher is already booked for another session. 1';
+            $errors['teacher'] = get_string('teacherbooked', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
 
@@ -236,7 +236,7 @@ class config_session_form extends moodleform {
         }
 
         // Session start date less.
-        if ( $seesionstartdate < $coursestartdate ) {
+        if ( $seesionstartdatetime < $coursestartdate ) {
             $errors['session_date'] = get_string('sessiondatenotavailable', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
@@ -271,10 +271,10 @@ class config_session_form extends moodleform {
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
 
-        $result = $DB->get_records('format_classroom_session', array('isdeleted' => '1',
+        $resultofsession = $DB->get_records('format_classroom_session', array('isdeleted' => '1',
             'location' => $data['location'], 'classroom' => $classroom));
 
-        foreach ($result as $value) {
+        foreach ($resultofsession as $value) {
             if (!((($value->session_date > $startday)
                 AND ($value->session_date > $endday))
                 OR ( ($value->session_date_end < $startday)

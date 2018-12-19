@@ -46,6 +46,7 @@ class simplehtml_form_location extends moodleform {
         $mform = $this->_form;  // Don't forget the underscore!
         $mform->addElement('hidden', 'cid');
         $mform->setType('cid', PARAM_INT);
+
         // Google Map API link.
         $mform->addElement('html', '<script
         	src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA3RCnSbZgjqVKOcixGRKB3cAbF6WdPc5M"></script>');
@@ -58,29 +59,30 @@ class simplehtml_form_location extends moodleform {
         $mform->addHelpButton('location', 'location', 'format_classroom');
         $mform->addRule('location', get_string('required'), 'required', null, 'client');
 
+        // Address for location.
         $mform->addElement('text', 'address', get_string('address', 'format_classroom'), 'placeholder="Enter Address"');
         $mform->setType('address', PARAM_RAW);
         $mform->addHelpButton('address', 'address', 'format_classroom');
         $mform->addRule('address', get_string('required'), 'required', null, 'client');
 
+        // Phone number of location.
         $mform->addElement('text', 'phoneno', get_string('phoneno', 'format_classroom'), 'placeholder="Enter Phone Number"');
         $mform->setType('phoneno', PARAM_RAW);
         $mform->addHelpButton('phoneno', 'phoneno', 'format_classroom');
         $mform->addRule('phoneno', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
 
         $mform->addElement('text', 'emailid', get_string('emailid', 'format_classroom'), 'placeholder="Enter Email ID"');
+        $mform->setType('emailid', PARAM_RAW);
         $mform->addHelpButton('emailid', 'emailid', 'format_classroom');
         $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
-        $mform->setType('emailid', PARAM_RAW);
 
-        $mform->addElement('html', '<div id="map"></div>');
+        $mform->addElement('html', '<div id="map"> </div>');
 
-        $classrooms = $DB->get_records_sql('select id,classroom from {format_classroom} where isdeleted != ?', array(0));
-        $array = array();
+        $classroomsdetails = $DB->get_records_sql('select id,classroom from {format_classroom} where isdeleted != ?', array(0));
         $key = array(null => 'Select Classroom');
         $i = 0;
-        foreach ($classrooms as $classr) {
-            $key[$classr->id] = $classr->classroom;
+        foreach ($classroomsdetails as $classroom) {
+            $key[$classroom->id] = $classroom->classroom;
             $i++;
         }
         $this->add_action_buttons(true, 'Submit');

@@ -142,3 +142,4 @@ $string['duplicateclassroom'] = 'Duplicate classroom name';
 $string['duplicatesessionname'] = 'Duplicate session name';
 $string['emailvalidation'] = 'Invalid Email ID';
 $string['negativenumber'] = 'Invalid number';
+$string['teacherbooked'] = 'Teacher is already booked for another session.';

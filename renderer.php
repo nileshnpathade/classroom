@@ -230,39 +230,46 @@ class format_classroom_renderer extends format_section_renderer_base {
                     $style = '';
                 }
 
-                $otherdetails = $sessiondetails->other_details;
+                $sessionotherdetails = $sessiondetails->other_details;
                 if (strlen($sessiondetails->other_details) > 100) {
-                    $otherdetails = strip_tags(substr($sessiondetails->other_details, 0, 80))."...
+                    $sessionotherdetails = strip_tags(substr($sessiondetails->other_details, 0, 80))."...
                     <a href='#' data-toggle='modal' data-target='#myModal".$c."'>Read More </a>";
                 }
 
                 echo "<div class='card-group' id='accordion'>";
                 echo "<div class='card'>";
+
                 echo "<a data-toggle='collapse' data-parent='#accordion'
                                 href='#collapse$c' class='card-link ".$style."' aria-expanded='true'>
                                 <div class='card-header'>
                                 <strong class='card-title'>".
                                     strtoupper('Session : '.$sessiondetails->session).
                                 "</strong><span class='toggleSymbol'></span>";
-                echo "</div></a>
-                </div>
-                </div>";
+                echo "</div></a></div></div>";
+
                 echo "<div id='collapse$c' class='collapse $in1' data-parent='#accordion'>";
                 echo "<div class='card-body managebody'>";
+
                 echo "<table width='100%' class='valign'><tr>";
                 echo "<td><b>Subscription Date From</b></td>";
                 echo "<td>".date('d-m-Y H:i', $sessiondetails->last_subscription_date_from)."</td>";
+
                 echo "<td><b>Session Location</b></td>";
                 echo "<td>";
+
                 $getlocation = $DB->get_record('format_classroom_location', array('id' => $sessiondetails->location));
-                $location = "<a href='#' data-toggle='modal' onclick='javascript:initAutocomplete()'
+                $locationofclass = "<a href='#' data-toggle='modal' onclick='javascript:initAutocomplete()'
                 data-target='#mylocation".$c."'>".strip_tags(substr($getlocation->location, 0, 15))."...</a>";
-                echo $location;
+                echo $locationofclass;
+
                 echo "</td>";
                 echo "</tr>";
+
                 echo "<tr>";
+
                 echo "<td><b>Subscription Date To</b></td>";
                 echo "<td>".date('d-m-Y H:i', $sessiondetails->last_subscription_date)."</td>";
+
                 echo "<td><b>Session Classroom</b></td>";
                 echo "<td>";
                 $getclassroom = $DB->get_record('format_classroom', array('id' => $sessiondetails->classroom));
@@ -314,7 +321,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "<tr>";
                 echo "<td colspan='1'><b>".get_string('otherdetails', 'format_classroom')."</b></td>";
                 echo "<td width='100px' valign='top' colspan='3'>";
-                echo $otherdetails;
+                echo $sessionotherdetails;
                 echo "</td>";
                 echo "</tr>";
                 echo "</table>";
@@ -413,7 +420,7 @@ class format_classroom_renderer extends format_section_renderer_base {
                 $otherdetails = $sessiondetails->other_details;
                 if (strlen($sessiondetails->other_details) > 100) {
                     $otherdetails = strip_tags(substr($sessiondetails->other_details, 0, 80))."... <a href='#'
-                    data-toggle='modal' data-target='#myModal".$c."'>Read More </a>";
+                    data-toggle='modal' data-target='#myModal".$c."'> Read More </a>";
                 }
 
                 echo "<div class='card-group' id='accordion'>";
@@ -469,10 +476,10 @@ class format_classroom_renderer extends format_section_renderer_base {
                     $details = substr($getclassroom->details, 0, 50);
                     $details1 = substr($getclassroom->details, 0, 50).'...<span id="black_only" class="substr"> Read more </span>';
                 }
-                $teacher = '';
+                $teacherfullname = '';
                 if ( !empty($sessiondetails->teacher) ) {
                     $teacheruser = get_complete_user_data('id', $sessiondetails->teacher);
-                    $teacher = $teacheruser->firstname.' '.$teacheruser->lastname;
+                    $teacherfullname = $teacheruser->firstname.' '.$teacheruser->lastname;
                 }
                 // HTML for Table start here.
                 echo "</td>";
@@ -484,11 +491,12 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "<td><b>Session Start Date & Time</b></td>";
                 echo "<td>".date('d-m-Y H:i', $sessiondetails->session_date)."</td>";
                 echo "</tr>";
+
                 echo "<tr>";
                 echo "<td><b>".get_string('maxenrol', 'format_classroom')."</b></td>";
                 echo "<td>".$sessiondetails->maxenrol."</td>";
                 echo "<td><b>".get_string('teacher', 'format_classroom')."</b></td>";
-                echo "<td>".$teacher."</td>";
+                echo "<td>".$teacherfullname."</td>";
                 echo "</tr>";
 
                 echo "<tr>";
@@ -496,68 +504,70 @@ class format_classroom_renderer extends format_section_renderer_base {
                 echo "<td width='100px' valign='top' colspan='3'>";
                 echo $otherdetails;
                 echo "</td>";
+
                 echo "</tr>";
                 echo "</table>";
                 echo "</div></div>";
                 // HTML for Table end here.
 
                 // Popup content for Othere details.
-                $popupcontent = '<div class="modal fade" id="myModal'.$c.'" role="dialog">';
-                $popupcontent .= '<div class="modal-dialog">';
-                $popupcontent .= '<div class="modal-content">';
-                $popupcontent .= '<div class="modal-header">';
-                $popupcontent .= '<h4 class="modal-title"> '.get_string('otherdetails', 'format_classroom').' </h4>';
-                $popupcontent .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
-                $popupcontent .= '</div> <div class="modal-body">';
-                $popupcontent .= '<table class="popuptable">';
-                $popupcontent .= '<tr id="hidethis"> <td> '.strip_tags($sessiondetails->other_details).' </td> </tr>';
-                $popupcontent .= '</table>';
-                $popupcontent .= '</div> <div class="modal-footer">';
-                $popupcontent .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
-                $popupcontent .= '</div> </div> </div> </div>';
-                echo $popupcontent;
+                $popupcontentdetails = '<div class="modal fade" id="myModal'.$c.'" role="dialog">';
+                $popupcontentdetails .= '<div class="modal-dialog">';
+                $popupcontentdetails .= '<div class="modal-content"><div class="modal-header">';
+                $popupcontentdetails .= '<h4 class="modal-title"> '. get_string('otherdetails', 'format_classroom') .' </h4>';
+                $popupcontentdetails .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                $popupcontentdetails .= '</div> <div class="modal-body">';
+                $popupcontentdetails .= '<table class="popuptable">';
+                $popupcontentdetails .= '<tr id="hidethis"> <td>  '.strip_tags($sessiondetails->other_details).'  </td> </tr>';
+                $popupcontentdetails .= '</table>';
+                $popupcontentdetails .= '</div> <div class="modal-footer">';
+                $popupcontentdetails .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
+                $popupcontentdetails .= '</div> </div> </div> </div>';
+                echo $popupcontentdetails;
 
                 // Popup content for Location.
-                $popuplocat = '<div class="modal fade" id="mylocation'.$c.'" role="dialog">';
-                $popuplocat .= '<div class="modal-dialog">';
-                $popuplocat .= '<div class="modal-content">';
-                $popuplocat .= '<div class="modal-header">';
-                $popuplocat .= '<h4 class="modal-title"> Location : '.strip_tags($getlocation->location).'</h4>';
-                $popuplocat .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
-                $popuplocat .= '</div> <div class="modal-body">';
-                $popuplocat .= '<input type="hidden" name="address" id="id_address" value="'.$getlocation->address.'" />';
-                $popuplocat .= '<table style="margin-left: 10px;">';
-                $popuplocat .= '<tr> <th>Address : </th> <td>'.$getlocation->address.'</td> </tr>';
-                $popuplocat .= '<tr> <th>Email ID  : </th> <td>'.$getlocation->emailid.'</td> </tr>';
-                $popuplocat .= '<tr> <th>Phone No : </th> <td>'.$getlocation->phoneno.'</td> </tr>';
-                $popuplocat .= '<tr> <th>Map : </th> <td> <div id="map"></div> </td> </tr>';
-                $popuplocat .= '</table> </div> <div class="modal-footer">';
-                $popuplocat .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
-                $popuplocat .= '</div> </div> </div> </div>';
-                echo $popuplocat;
+                $popuplocation = '<div class="modal fade" id="mylocation'.$c.'" role="dialog">';
+                $popuplocation .= '<div class="modal-dialog">';
+                $popuplocation .= '<div class="modal-content"><div class="modal-header">';
+                $popuplocation .= '<h4 class="modal-title"> Location : '.strip_tags($getlocation->location).'</h4>';
+                $popuplocation .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                $popuplocation .= '</div> <div class="modal-body">';
+                $popuplocation .= '<input type="hidden" name="address" id="id_address" value="'.$getlocation->address.'" />';
+
+                $popuplocation .= '<table style="margin-left: 10px;">';
+                $popuplocation .= '<tr> <th>Address : </th> <td>'.$getlocation->address.'</td> </tr>';
+                $popuplocation .= '<tr> <th>Email ID  : </th> <td>'.$getlocation->emailid.'</td> </tr>';
+                $popuplocation .= '<tr> <th>Phone No : </th> <td>'.$getlocation->phoneno.'</td> </tr>';
+                $popuplocation .= '<tr> <th>Map : </th> <td> <div id="map"></div> </td> </tr>';
+                $popuplocation .= '</table> </div> <div class="modal-footer">';
+
+                $popuplocation .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
+                $popuplocation .= '</div> </div> </div> </div>';
+                echo $popuplocation;
 
                 // Popup content for Classroom.
-                $popupclass = '<div class="modal fade" id="myclassroom'.$c.'" role="dialog">';
-                $popupclass .= '<div class="modal-dialog">';
-                $popupclass .= '<div class="modal-content">';
-                $popupclass .= '<div class="modal-header">';
-                $popupclass .= '<h4 class="modal-title"> Classroom : '.$getclassroom->classroom.'</h4>';
-                $popupclass .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
-                $popupclass .= '</div> <div class="modal-body">';
-                $popupclass .= '<table style="margin-left: 10px;">';
-                $popupclass .= '<tr> <th>Location : </th> <td> '.$location.'</td> </tr>';
-                $popupclass .= '<tr> <th>Seats : </th> <td>'.$seats.'</td> </tr>';
-                $popupclass .= '<tr id="hidethis"> <th>Details : </th> <td> '.$details1.'</td> </tr>';
-                $popupclass .= '<tr id="hidethis1" class="hidden" valign="top" > <th>Details : </th>';
-                $popupclass .= '<td> '.$hideeetails.'</td> </tr>';
-                $popupclass .= '<tr id="equipment"> <th>Equipment : </th> <td> '.$equipment1.'</td> </tr>';
-                $popupclass .= '<tr id="equipment1" class="hidden" valign="top"> <th>Equipment : </th>';
-                $popupclass .= '<td> '.$hideequipmentval.'</td> </tr>';
-                $popupclass .= '</table>';
-                $popupclass .= '</div> <div class="modal-footer">';
-                $popupclass .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
-                $popupclass .= '</div> </div> </div> </div>';
-                echo $popupclass;
+                $popupclassroom = '<div class="modal fade" id="myclassroom'.$c.'" role="dialog">';
+                $popupclassroom .= '<div class="modal-dialog">';
+                $popupclassroom .= '<div class="modal-content"><div class="modal-header">';
+                $popupclassroom .= '<h4 class="modal-title"> Classroom : '.$getclassroom->classroom.'</h4>';
+                $popupclassroom .= '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                $popupclassroom .= '</div> <div class="modal-body">';
+
+                $popupclassroom .= '<table style="margin-left: 10px;">';
+                $popupclassroom .= '<tr> <th>Location : </th> <td> '.$location.'</td> </tr>';
+                $popupclassroom .= '<tr> <th>Seats : </th> <td>'.$seats.'</td> </tr>';
+                $popupclassroom .= '<tr id="hidethis"> <th>Details : </th> <td> '.$details1.'</td> </tr>';
+                $popupclassroom .= '<tr id="hidethis1" class="hidden" valign="top" > <th>Details : </th>';
+                $popupclassroom .= '<td> '.$hideeetails.'</td> </tr>';
+                $popupclassroom .= '<tr id="equipment"> <th>Equipment : </th> <td> '.$equipment1.'</td> </tr>';
+                $popupclassroom .= '<tr id="equipment1" class="hidden" valign="top"> <th>Equipment : </th>';
+                $popupclassroom .= '<td> '.$hideequipmentval.'</td> </tr>';
+                $popupclassroom .= '</table>';
+
+                $popupclassroom .= '</div> <div class="modal-footer">';
+                $popupclassroom .= '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
+                $popupclassroom .= '</div> </div> </div> </div>';
+                echo $popupclassroom;
 
                 $c = $c + 1;
             }

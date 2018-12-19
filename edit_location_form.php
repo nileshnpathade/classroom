@@ -66,8 +66,8 @@ class location_edit_form extends moodleform {
         // Location address to reach.
         $mform->addElement('text', 'address', get_string('address', 'format_classroom'), 'placeholder="Enter Address"');
         $mform->addHelpButton('location', 'location', 'format_classroom');
-        $mform->setType('address', PARAM_RAW);
         $mform->addHelpButton('address', 'address', 'format_classroom');
+        $mform->setType('address', PARAM_RAW);
         $mform->addRule('address', get_string('required'), 'required', null, 'client');
 
         // Location phone to contact.
@@ -79,11 +79,13 @@ class location_edit_form extends moodleform {
         // Location email id to contact by mail.
         $mform->addElement('text', 'emailid', get_string('emailid', 'format_classroom'), 'placeholder="Enter Email ID"');
         $mform->addHelpButton('emailid', 'emailid', 'format_classroom');
-        $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
         $mform->setType('emailid', PARAM_RAW);
+        $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
+
 
         // Map for reach location.
         $mform->addElement('html', '<div id="map"></div>');
+
         $this->add_action_buttons(true, 'Submit');
     }
 

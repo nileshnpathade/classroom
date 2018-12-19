@@ -237,11 +237,11 @@ class session_edit_form extends moodleform {
         AND teacher = ? AND id != ?";
         $resultsessionothers = $DB->get_records_sql($sqlsessionother, array($data['teacher'], $data['session_id']));
 
+        // Validation on teacher already booked or not.
         if (!empty($resultsessionothers)) {
-            $errors['teacher'] = 'Teacher is already booked for another session. 1';
+            $errors['teacher'] = get_string('teacherbooked', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
         if ( $courseenddate != 0 ) {
             // Session start date must be grather than course state date.
             if ( $seesionenddateval > $courseenddate ) {
@@ -249,38 +249,32 @@ class session_edit_form extends moodleform {
                 $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
             }
         }
-
         // Subscription date from should be less than current date time.
         if ($data['last_subscription_date_from'] < time()) {
             $errors['last_subscription_date_from'] = get_string('lastsubscriptiontimefrom', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
         // Last Subscription date from grather than start day.
         if ($startday < $data['last_subscription_date_from']) {
             $errors['last_subscription_date_from'] = get_string('lsubdatefrom', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
         // Subscription date from should be less than current date time.
         if ($data['last_subscription_date'] < time()) {
             $errors['last_subscription_date'] = get_string('lastsubscriptiontime', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
         // Subscription date from should be grather than Subscription date to.
         if ($data['last_subscription_date'] < $data['last_subscription_date_from']) {
             $errors['last_subscription_date'] = get_string('tosublesssubdate', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
         // Last subscription date to should be grather than end date.
         if ($endday < $data['last_subscription_date']) {
             $errors['last_subscription_date'] = get_string('tosublesssend', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
-
-        $resultsess = $DB->get_records_sql('select * from {format_classroom_session}
+        $resultsess = $DB->get_records_sql('SELECT * FROM {format_classroom_session}
             where isdeleted !=0 and location=?
             and classroom=? and id !=?',
             array($data['location'], $_POST['classroom'], $data['session_id']));

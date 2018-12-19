@@ -48,24 +48,30 @@ class addclassroom_form extends moodleform {
         $mform->setType('cid', PARAM_INT);
         $mform->addElement('hidden', 'location_id', $locationid);
         $mform->setType('location_id', PARAM_INT);
+
+        // Classroom Header.
         $mform->addElement('header', 'addclassroom', get_string('addclassroom', 'format_classroom'));
+
         $mform->addElement('text', 'classroom', get_string('classroom', 'format_classroom'));
         $mform->setType('classroom', PARAM_RAW);
         $mform->addHelpButton('classroom', 'classroom', 'format_classroom');
         $mform->addRule('classroom', get_string('required'), 'required', null, 'client');
 
         $mform->addElement('text', 'emailid', get_string('emailid', 'format_classroom'));
+
         $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
         $mform->addHelpButton('emailid', 'emailid', 'format_classroom');
         $mform->setType('emailid', PARAM_RAW);
 
         $mform->addElement('text', 'phoneno', get_string('phoneno', 'format_classroom'));
+
         $mform->addHelpButton('phoneno', 'phoneno', 'format_classroom');
         $mform->addRule('phoneno', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
         $mform->setType('phoneno', PARAM_RAW);
 
         $mform->addElement('text', 'seats', get_string('seats', 'format_classroom'));
         $mform->setType('seats', PARAM_RAW);
+
         $mform->addHelpButton('seats', 'seats', 'format_classroom');
         $mform->addRule('seats', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
         $mform->addRule('seats', get_string('required'), 'required', null, 'client');
