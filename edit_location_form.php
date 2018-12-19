@@ -82,7 +82,6 @@ class location_edit_form extends moodleform {
         $mform->setType('emailid', PARAM_RAW);
         $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
 
-
         // Map for reach location.
         $mform->addElement('html', '<div id="map"></div>');
 

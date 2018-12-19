@@ -58,13 +58,11 @@ class classroom_edit_form extends moodleform {
         $mform->addRule('emailid', get_string('emailvalidation', 'format_classroom'), 'email', null, 'client');
         $mform->addHelpButton('emailid', 'emailid', 'format_classroom');
 
-
         // Phone number for contacting to classroom.
         $mform->addElement('text', 'phoneno', get_string('phoneno', 'format_classroom'));
         $mform->setType('phoneno', PARAM_RAW);
         $mform->addHelpButton('phoneno', 'phoneno', 'format_classroom');
         $mform->addRule('phoneno', get_string('number_required', 'format_classroom'), 'numeric', null, 'client');
-
 
         // Seats is showing capacity of classroom.
         $mform->addElement('text', 'seats', get_string('seats', 'format_classroom'));
@@ -79,7 +77,6 @@ class classroom_edit_form extends moodleform {
             'rows="5" cols="19" maxlength="5000"');
         $mform->setType('details', PARAM_RAW);
         $mform->addHelpButton('details', 'details', 'format_classroom');
-
 
         // Classroom with equipment or not.
         $mform->addElement('textarea', 'equipment', get_string("equipment", "format_classroom"),

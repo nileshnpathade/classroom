@@ -171,8 +171,8 @@ class session_edit_form extends moodleform {
         global $DB;
 
         $errors = array();
-        $startday = $data['session_date'];
-        $endday = $data['session_date_end'];
+        $startdaydate = $data['session_date'];
+        $enddaydate = $data['session_date_end'];
         $maxenrol = $data['maxenrol'];
         $getcoursedetails = $DB->get_record('course', array('id' => $data['courseid']));
         $seesionstartdate = $data['session_date'];
@@ -209,12 +209,13 @@ class session_edit_form extends moodleform {
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
         // Session start date must be bigger than end date.
-        if ($startday >= $endday) {
+        if ( $startdaydate >= $enddaydate ) {
             $errors['session_date_end'] .= get_string('invalidsessiondateenddaterange', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
         // Calculate error count.
         $er = explode('<br/>', $errors['session_date_end']);
+
         if (count($er) >= 2) {
             $errors['session_date_end'] = get_string('invalidsessiondateenddate', 'format_classroom');
         }
@@ -255,7 +256,7 @@ class session_edit_form extends moodleform {
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
         // Last Subscription date from grather than start day.
-        if ($startday < $data['last_subscription_date_from']) {
+        if ($startdaydate < $data['last_subscription_date_from']) {
             $errors['last_subscription_date_from'] = get_string('lsubdatefrom', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
@@ -270,7 +271,7 @@ class session_edit_form extends moodleform {
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
         // Last subscription date to should be grather than end date.
-        if ($endday < $data['last_subscription_date']) {
+        if ($enddaydate < $data['last_subscription_date']) {
             $errors['last_subscription_date'] = get_string('tosublesssend', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
@@ -280,10 +281,10 @@ class session_edit_form extends moodleform {
             array($data['location'], $_POST['classroom'], $data['session_id']));
 
         foreach ($resultsess as $value) {
-            if (!((($value->session_date > $startday)
-                AND ($value->session_date > $endday))
-                OR ( ($value->session_date_end < $startday)
-                    AND ($value->session_date_end < $endday)))) {
+            if (!((($value->session_date > $startdaydate)
+                AND ($value->session_date > $enddaydate))
+                OR ( ($value->session_date_end < $startdaydate)
+                    AND ($value->session_date_end < $enddaydate)))) {
                 $errors['classroom'] = get_string('sessionenddate', 'format_classroom');
             }
         }
