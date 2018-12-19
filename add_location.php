@@ -27,7 +27,7 @@ require_once('../../../config.php');
 require_once(dirname(__FILE__).'/add_location_form.php');
 require_once('../../../course/lib.php');
 
-global $CFG, $USER, $DB, $PAGE, $COURSE;
+global $CFG, $DB, $PAGE;
 $context = context_system::instance();
 $PAGE->set_context($context);
 $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/course/format/classroom/css/style.css'));
@@ -57,7 +57,7 @@ if ($mform->is_cancelled()) {
     $location->phoneno = (isset($fromform->phoneno)) ? $fromform->phoneno : '';
     $location->emailid = (isset($fromform->emailid)) ? $fromform->emailid : '';
     $location->isdeleted = 1;
-    $insertedid = $DB->insert_record('classroom_location', $location);
+    $insertedid = $DB->insert_record('format_classroom_location', $location);
     if ($insertedid > 0) {
         $redirect = $CFG->wwwroot.'/course/format/classroom/manage_location.php';
         redirect($redirect, 'Location added successfully', null, \core\output\notification::NOTIFY_SUCCESS);

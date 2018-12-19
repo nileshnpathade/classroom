@@ -26,10 +26,10 @@ require_once($CFG->libdir.'/adminlib.php');
 $seesionid = required_param('seesionid',  PARAM_INT);
 $courseid = required_param('courseid',  PARAM_INT);
 
-global $COURSE, $USER, $DB;
+global $USER, $DB;
 
 if (!empty($seesionid)) {
-    $getsessiondetails  = $DB->get_record('classroom_session', array('id' => $seesionid));
+    $getsessiondetails  = $DB->get_record('format_classroom_session', array('id' => $seesionid));
 }
 
 $context = context_system::instance();
@@ -56,8 +56,8 @@ if (!$PAGE->user_is_editing()) {
 if (optional_param('add', false, PARAM_BOOL) and confirm_sesskey()) {
     $addselect = optional_param_array('addselect', null, PARAM_RAW);
     foreach ($addselect as $userid) {
-        $checkexits = $DB->get_records('classroom_assignuser', array('session_id' => $seesionid, 'userid' => $userid));
-        $countofenroll = $DB->get_records('classroom_assignuser', array('session_id' => $seesionid));
+        $checkexits = $DB->get_records('format_classroom_assignuser', array('session_id' => $seesionid, 'userid' => $userid));
+        $countofenroll = $DB->get_records('format_classroom_assignuser', array('session_id' => $seesionid));
         if (count($countofenroll) >= $getsessiondetails->maxenrol) {
             $baseurl = '/course/format/classroom/adduserforsession.php';
             $urlredirct = $CFG->wwwroot.$baseurl.'?seesionid='.$seesionid.'&courseid='.$courseid;
@@ -70,7 +70,7 @@ if (optional_param('add', false, PARAM_BOOL) and confirm_sesskey()) {
             $classroomassignuser->session_id = $seesionid;
             $classroomassignuser->userid = $userid;
             $classroomassignuser->assign_by = $USER->id;
-            $insertedid = $DB->insert_record('classroom_assignuser', $classroomassignuser);
+            $insertedid = $DB->insert_record('format_classroom_assignuser', $classroomassignuser);
             // Assign Mail.
             $userto = $DB->get_record('user', array('id' => $userid));
             $messagehtml = "Dear $userto->firstname,<br/><br/>
@@ -85,7 +85,7 @@ if (optional_param('add', false, PARAM_BOOL) and confirm_sesskey()) {
 } else if (optional_param('remove', false, PARAM_BOOL) and confirm_sesskey()) {
     $removeselect = optional_param('removeselect', 0, PARAM_INT);
     foreach ($removeselect as $userid) {
-        $scc = $DB->delete_records('classroom_assignuser', array('userid' => $userid, 'session_id' => $seesionid));
+        $scc = $DB->delete_records('format_classroom_assignuser', array('userid' => $userid, 'session_id' => $seesionid));
 
         // Unassign Mail.
         $userto = $DB->get_record('user', array('id' => $userid));
@@ -126,7 +126,7 @@ echo $OUTPUT->header();
                                 AND c.id = '$courseid'
                                 AND u.id != 1 AND u.id != 2
                                 AND roleid = 5
-                                AND  u.id  IN (SELECT ca.userid FROM {classroom_assignuser} as ca
+                                AND  u.id  IN (SELECT ca.userid FROM {format_classroom_assignuser} as ca
                                 WHERE ca.session_id = $seesionid)";
                             $getassinguser = $DB->get_records_sql($sql, array());
                             $assignusers = array('' => 'Assign users');
@@ -163,7 +163,7 @@ echo $OUTPUT->header();
                     AND c.id = '$courseid'
                     AND u.id != 1 AND u.id != 2
                     AND roleid = 5
-                    AND  u.id NOT IN (SELECT ca.userid FROM {classroom_assignuser} as ca WHERE ca.session_id = $seesionid)";
+                    AND  u.id NOT IN (SELECT ca.userid FROM {format_classroom_assignuser} as ca WHERE ca.session_id = $seesionid)";
 
                     $getassinguser = $DB->get_records_sql($sql, array());
                     $ausers = array('' => 'Unassign users');

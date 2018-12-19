@@ -104,7 +104,7 @@ class addclassroom_form extends moodleform {
         // Check classroom is duplicate or not.
         $classroom = $data['classroom'];
         $locationid = $data['location_id'];
-        $getclassroom = $DB->get_record('classroom', array('classroom' => $classroom,
+        $getclassroom = $DB->get_record('format_classroom', array('classroom' => $classroom,
             'isdeleted' => 1, 'location_id' => $locationid));
         if ( !empty($getclassroom) ) {
             $err['classroom'] = get_string('duplicateclassroom', 'format_classroom');

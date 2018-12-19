@@ -63,7 +63,7 @@ class config_assignuser_form extends moodleform {
             AND c.id = '$courseid'
             AND u.id != 1 AND u.id != 2
             AND roleid = 5
-            AND  u.id  IN (SELECT ca.userid from {classroom_assignuser} as ca
+            AND  u.id  IN (SELECT ca.userid from {format_classroom_assignuser} as ca
             where ca.session_id = $seesionid)";
 
         $getassinguser = $DB->get_records_sql($sql, array());
@@ -85,7 +85,7 @@ class config_assignuser_form extends moodleform {
             AND c.id = '$courseid'
             AND u.id != 1 AND u.id != 2
             AND roleid = 5
-            AND  u.id NOT IN (SELECT ca.userid from {classroom_assignuser} as ca
+            AND  u.id NOT IN (SELECT ca.userid from {format_classroom_assignuser} as ca
             where ca.session_id = $seesionid)";
 
         $getassinguser = $DB->get_records_sql($sql, array());

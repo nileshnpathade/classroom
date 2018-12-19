@@ -75,7 +75,8 @@ class simplehtml_form_location extends moodleform {
 
         $mform->addElement('html', '<div id="map"></div>');
 
-        $classrooms = $DB->get_records_sql('select id,classroom from {classroom} where isdeleted != ?', array(0));
+        $classrooms = $DB->get_records_sql('select id,classroom from {format_classroom} where isdeleted != ?', array(0));
+        $array = array();
         $key = array(null => 'Select Classroom');
         $i = 0;
         foreach ($classrooms as $classr) {
@@ -104,7 +105,7 @@ class simplehtml_form_location extends moodleform {
             $err['location'] = get_string('required');
         }
         // Classroom location duplicated validation.
-        $results = $DB->get_records_sql("select * from {classroom_location} where isdeleted != 0
+        $results = $DB->get_records_sql("select * from {format_classroom_location} where isdeleted != 0
         	AND location=?" , array($data['location']));
         if (!empty($results)) {
             $err['location'] = get_string('duplicatelocation', 'format_classroom');

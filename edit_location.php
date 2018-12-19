@@ -24,7 +24,7 @@
 
 require_once('../../../config.php');
 require_once(dirname(__FILE__).'/edit_location_form.php');
-global $CFG, $USER, $DB, $PAGE, $COURSE;
+global $CFG, $DB, $PAGE;
 $cid = required_param('cid', PARAM_INT);
 $context = context_system::instance();
 $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/course/format/classroom/css/style.css'));
@@ -41,7 +41,7 @@ $PAGE->navbar->add('Manage Location', new moodle_url('/course/format/classroom/m
 $PAGE->navbar->add('Update Location');
 
 require_login();
-if ($userdata = $DB->get_record('classroom_location', array('id' => $cid))) {
+if ($userdata = $DB->get_record('format_classroom_location', array('id' => $cid))) {
     $cid = $userdata->id;
     $location = $userdata->location;
     $address = $userdata->address;
@@ -66,7 +66,7 @@ if ($mform->is_cancelled()) {
     $studentrecord->address  = (isset($fromform->address)) ? $fromform->address : '';
     $studentrecord->phoneno  = (isset($fromform->phoneno)) ? $fromform->phoneno : '';
     $studentrecord->emailid  = (isset($fromform->emailid)) ? $fromform->emailid : '';
-    $updateid = $DB->update_record('classroom_location', $studentrecord);
+    $updateid = $DB->update_record('format_classroom_location', $studentrecord);
     $redirecturl = $CFG->wwwroot.'/course/format/classroom/manage_location.php';
     redirect($redirecturl, 'Location update successfully', null, \core\output\notification::NOTIFY_SUCCESS);
 }

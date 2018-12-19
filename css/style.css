@@ -19,10 +19,6 @@
     background-color: #1177d1;
     color: #fff;
 }
-.card-header:title {
-    content: '';
-    display: none;
-}
 .card-header:after {
     content: '\2212';
     color: #0f77d1;

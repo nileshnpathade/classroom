@@ -41,7 +41,7 @@ class config_session_form extends moodleform {
      * @return void
      */
     public function definition() {
-        global $CFG, $COURSE, $DB, $PAGE;
+        global $USER, $CFG, $COURSE, $DB, $PAGE;
         $mform =& $this->_form;
         $PAGE->requires->css( new moodle_url($CFG->wwwroot . '/course/format/classroom/css/style.css'));
         $PAGE->requires->js( new moodle_url($CFG->wwwroot . '/course/format/classroom/myjavascript.js'));
@@ -65,6 +65,7 @@ class config_session_form extends moodleform {
         $mform->addElement('date_time_selector', 'last_subscription_date_from',
             get_string('lastsubscriptiondatefrom', 'format_classroom') , $option);
         $mform->addHelpButton('last_subscription_date_from', 'lastsubscriptiondatefrom', 'format_classroom');
+
         $mform->addElement('date_time_selector', 'last_subscription_date',
             get_string('lastsubscriptiondateto', 'format_classroom') , $option);
         $mform->addHelpButton('last_subscription_date', 'lastsubscriptiondateto', 'format_classroom');
@@ -78,13 +79,14 @@ class config_session_form extends moodleform {
             'format_classroom'), $option);
         $mform->addHelpButton('session_date_end', 'sessiondatetime_end', 'format_classroom');
 
-        $classrooms = $DB->get_records_sql('select id,location from {classroom_location}
+        $classrooms = $DB->get_records_sql('select id,location from {format_classroom_location}
             where isdeleted != ?', array(0));
         $key = array(null => 'Select Location');
         foreach ($classrooms as $classr) {
             $key[$classr->id] = $classr->location;
         }
 
+        $attributes = array();
         $mform->addElement('selectwithlink', 'location', get_string('location',
             'format_classroom'), $key, array('onchange' =>
             'javascript:get_states("'.$CFG->wwwroot.'", this.value,this.id);'),
@@ -147,6 +149,7 @@ class config_session_form extends moodleform {
      * @return void
      */
     public function definition_after_data() {
+        global $DB, $CFG;
         $mform = $this->_form;
         $classroom = $mform->getElementValue('classroom');
         $mform->setDefault('classroom', array('value' => $classroom));
@@ -160,7 +163,7 @@ class config_session_form extends moodleform {
      * @param $files files input submitted.
      */
     public function validation($data, $files) {
-        global $DB;
+        global $CFG, $DB;
         $errors = array();
         $startday = $data['session_date'];
         $endday = $data['session_date_end'];
@@ -181,26 +184,31 @@ class config_session_form extends moodleform {
 
         // Duplicate session name.
         $sessionname = trim($data['session']);
-        $resultsessiondet = $DB->get_records('classroom_session', array('session' => $sessionname, 'courseid' => $data['courseid']));
-        if (!empty($resultsessiondet)) {
+        $resultsession = $DB->get_records('format_classroom_session', array('session' => $sessionname,
+            'courseid' => $data['courseid']));
+        if (!empty($resultsession)) {
             $errors['session'] = get_string('duplicatesessionname', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
+
         // Session start date must be greater than current time.
         if ($data['session_date'] < time()) {
             $errors['session_date'] = get_string('invalidsessiondatecurrent', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
+
         // Session end date must be greater than current time.
         if ($data['session_date_end'] < time()) {
             $errors['session_date_end'] = get_string('invalidsessiondateenddate', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
+
         // Session start date must be bigger than end date.
         if ($startday >= $endday) {
             $errors['session_date_end'] .= get_string('invalidsessiondateenddaterange', 'format_classroom');
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
+
         $er = explode('<br/>', $errors['session_date_end']);
         if (count($er) >= 2) {
             $errors['session_date_end'] = get_string('invalidsessiondateenddate', 'format_classroom');
@@ -211,7 +219,7 @@ class config_session_form extends moodleform {
             $errors['session_date'] = get_string('invalidsessiondatecurrent', 'format_classroom');
         }
 
-        $sqlsessionother = "SELECT * FROM {classroom_session}
+        $sqlsessionother = "SELECT * FROM {format_classroom_session}
         WHERE ((session_date BETWEEN '".$data['session_date']."' AND '".$data['session_date_end']."')
         OR (session_date_end BETWEEN '".$data['session_date']."' AND '".$data['session_date_end']."')
         OR (session_date <= '".$data['session_date']."' AND session_date_end >= '".$data['session_date_end']."')) AND teacher = ?";
@@ -265,7 +273,7 @@ class config_session_form extends moodleform {
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         }
 
-        $result = $DB->get_records('classroom_session', array('isdeleted' => '1',
+        $result = $DB->get_records('format_classroom_session', array('isdeleted' => '1',
             'location' => $data['location'], 'classroom' => $classroom));
 
         foreach ($result as $key => $value) {
@@ -281,7 +289,7 @@ class config_session_form extends moodleform {
             $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');
         } else {
             // Validation for maxenrol.
-            $getmaxenrol = $DB->get_record('classroom', array('id' => $classroom));
+            $getmaxenrol = $DB->get_record('format_classroom', array('id' => $classroom));
             if ($maxenrol > $getmaxenrol->seats) {
                 $errors['maxenrol'] = get_string('maxenrolmorethanseats', 'format_classroom');
                 $errors['classroom'] = get_string('reselectlocationandclassroom', 'format_classroom');

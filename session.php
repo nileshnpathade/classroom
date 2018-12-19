@@ -51,7 +51,7 @@ $templatedata->courseid = optional_param('courseid', 0, PARAM_INT);
 $args = array('courseid' => $courseid);
 $mform = new config_session_form(null, $args);
 $mform->set_data($templatedata);
-$classroom = optional_param('classroom', '', PARAM_INT);
+
 if ($mform->is_cancelled()) {
     redirect($CFG->wwwroot . "/course/view.php?id=".$courseid."&editmenumode=true&menuaction=sessionlist&token=1");
 } else if ($fromform = $mform->get_data()) {
@@ -61,7 +61,7 @@ if ($mform->is_cancelled()) {
     $classroomsession->session_date = (isset($fromform->session_date)) ? $fromform->session_date : time();
     $classroomsession->session_date_end = (isset($fromform->session_date_end)) ? $fromform->session_date_end : time();
     $classroomsession->location = (isset($fromform->location)) ? $fromform->location : '';
-    $classroomsession->classroom = (isset($classroom)) ? $classroom : '';
+    $classroomsession->classroom = (isset($_POST['classroom'])) ? $_POST['classroom'] : '';
     $classroomsession->teacher = (isset($fromform->teacher)) ? $fromform->teacher : '';
     $classroomsession->maxenrol = (isset($fromform->maxenrol)) ? $fromform->maxenrol : '';
     $classroomsession->last_subscription_date_from = (isset($fromform->last_subscription_date_from))
@@ -70,7 +70,7 @@ if ($mform->is_cancelled()) {
     ? $fromform->last_subscription_date : time();
     $classroomsession->other_details = (isset($fromform->other_details)) ? $fromform->other_details : '';
     $classroomsession->create_by = (isset($USER->id)) ? $USER->id : '';
-    $insertedid = $DB->insert_record('classroom_session', $classroomsession);
+    $insertedid = $DB->insert_record('format_classroom_session', $classroomsession);
 
     if ($insertedid > 0) {
         $redirecturl = 'course/view.php?id='.$fromform->courseid.'&editmenumode=true&menuaction=sessionlist&token=1';

@@ -50,7 +50,7 @@ if ($sessionid == 0) {
     AND cxt.instanceid = c.id
     AND c.id = '$courseid'
     AND u.id != 1 AND u.id != 2
-    AND roleid = 5 AND roleid = 5 AND  u.id  IN (SELECT ca.userid from {classroom_assignuser} as ca
+    AND roleid = 5 AND roleid = 5 AND  u.id  IN (SELECT ca.userid from {format_classroom_assignuser} as ca
     where ca.session_id = $sessionid)";
 }
 
@@ -61,7 +61,7 @@ foreach ($getenrolusers as $re) {
     $userid = $re->userid;
     $username = $re->username;
     $email = $re->email;
-    $getattendancsdetails = $DB->get_record('classroom_attendance',
+    $getattendancsdetails = $DB->get_record('format_classroom_attendance',
     array('sessionid' => $sessionid, 'courseid' => $courseid, 'userid' => $userid));
     $attendance = isset($getattendancsdetails->attendance) ? $getattendancsdetails->attendance : 'A';
     $comment = isset($getattendancsdetails->comment) ? $getattendancsdetails->comment : '';
