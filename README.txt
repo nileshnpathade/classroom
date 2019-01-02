@@ -26,7 +26,7 @@ Installation
 
 You can also download the package and upload it in Install Plugin area. The 
 format will be installed. You can download the package from moodle.org, or
-Visit https://github.com/nileshnpathade/classroom & download classroom folder.
+Visit https://github.com/nileshnpathade/moodle-format_classroom & download classroom folder.
 
 Once you install the plugin, go through -
 Site administrator/Plugins/Course Format/Classroom, Add Locations on which the 
