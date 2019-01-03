@@ -48,7 +48,7 @@ if (!$PAGE->user_is_editing()) {
     redirect($CFG->wwwroot);
 }
 $classroomid = 0;
-$checkexits = $DB->get_record('format_classroom_session', array('id' => $sessionid));
+$checkexits = $DB->get_record('classroom_session', array('id' => $sessionid));
 if (!empty($checkexits)) {
     $classroomid = $checkexits->classroom;
 }
@@ -56,30 +56,30 @@ $templatedata = new stdClass();
 $args = array('courseid' => $courseid, 'session_id' => $sessionid);
 $mform = new session_edit_form(null, $args);
 $mform->set_data($args);
-
+$classroom = optional_param('classroom', '', PARAM_INT);
 if ($mform->is_cancelled()) {
     $cancleurl = $CFG->wwwroot . "/course/view.php?id=".$courseid."&editmenumode=true&menuaction=sessionlist&token=1";
     redirect($cancleurl);
 } else if ($fromform = $mform->get_data()) {
-    $classroomsessionedit = new stdClass();
-    $classroomsessionedit->id = (isset($fromform->session_id)) ? $fromform->session_id : '0';
-    $classroomsessionedit->session = (isset($fromform->session)) ? $fromform->session : '';
-    $classroomsessionedit->courseid = (isset($fromform->courseid)) ? $fromform->courseid : '';
-    $classroomsessionedit->session_date = (isset($fromform->session_date)) ? $fromform->session_date : time();
-    $classroomsessionedit->session_date_end = (isset($fromform->session_date_end))
+    $classroomsession = new stdClass();
+    $classroomsession->id = (isset($fromform->session_id)) ? $fromform->session_id : '0';
+    $classroomsession->session = (isset($fromform->session)) ? $fromform->session : '';
+    $classroomsession->courseid = (isset($fromform->courseid)) ? $fromform->courseid : '';
+    $classroomsession->session_date = (isset($fromform->session_date)) ? $fromform->session_date : time();
+    $classroomsession->session_date_end = (isset($fromform->session_date_end))
     ? $fromform->session_date_end : time();
-    $classroomsessionedit->location = (isset($fromform->location)) ? $fromform->location : '';
-    $classroomsessionedit->classroom = (isset($_POST['classroom'])) ? $_POST['classroom'] : '';
-    $classroomsessionedit->teacher = (isset($fromform->teacher)) ? $fromform->teacher : '';
-    $classroomsessionedit->maxenrol = (isset($fromform->maxenrol)) ? $fromform->maxenrol : '';
-    $classroomsessionedit->last_subscription_date = (isset($fromform->last_subscription_date))
+    $classroomsession->location = (isset($fromform->location)) ? $fromform->location : '';
+    $classroomsession->classroom = (isset($classroom)) ? $classroom : '';
+    $classroomsession->teacher = (isset($fromform->teacher)) ? $fromform->teacher : '';
+    $classroomsession->maxenrol = (isset($fromform->maxenrol)) ? $fromform->maxenrol : '';
+    $classroomsession->last_subscription_date = (isset($fromform->last_subscription_date))
     ? $fromform->last_subscription_date : time();
-    $classroomsessionedit->last_subscription_date_from = (isset($fromform->last_subscription_date_from))
+    $classroomsession->last_subscription_date_from = (isset($fromform->last_subscription_date_from))
     ? $fromform->last_subscription_date_from : time();
-    $classroomsessionedit->other_details = (isset($fromform->other_details)) ? $fromform->other_details : '';
-    $classroomsessionedit->create_by = (isset($USER->id)) ? $USER->id : '';
+    $classroomsession->other_details = (isset($fromform->other_details)) ? $fromform->other_details : '';
+    $classroomsession->create_by = (isset($USER->id)) ? $USER->id : '';
 
-    $updatedid = $DB->update_record('format_classroom_session', $classroomsessionedit);
+    $updatedid = $DB->update_record('classroom_session', $classroomsession);
     if ($updatedid > 0) {
         $redirecturl = $CFG->wwwroot.'/course/view.php?id='.$fromform->courseid;
         $redirecturl .= '&editmenumode=true&menuaction=sessionlist&token=1';
