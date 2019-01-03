@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Adding classroom form desgin.
+ *
  * @since 3.4.2
  * @package format_classroom
  * @copyright eNyota Learning Pvt Ltd.
@@ -91,7 +93,9 @@ class addclassroom_form extends moodleform {
 
     /**
      * Custom validation should be added here.
-     *
+     * 
+     * $data submitted data.
+     * $files submitted.
      * @return void
      */
     public function validation($data, $files) {

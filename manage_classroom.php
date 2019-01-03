@@ -16,7 +16,6 @@
 
 /**
  * Manage classroom settings.
- * List of classroom and showing action of Modify/Update classroom details.
  *
  * @since 3.4.2
  * @package format_classroom
